@@ -1,0 +1,10 @@
+/JavaApplication6/nbproject/private/
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
