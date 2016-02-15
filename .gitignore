@@ -9,4 +9,5 @@ nbactions.xml
 build.xml
 manifest.mf
 lib/
+nbproject/
 /Image Steganography/nbproject/private/
