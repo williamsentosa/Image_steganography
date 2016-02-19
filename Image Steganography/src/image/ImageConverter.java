@@ -4,8 +4,10 @@ import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -16,14 +18,14 @@ import javax.imageio.ImageIO;
  *
  * @author William Sentosa
  */
-public class Image {
+public class ImageConverter {
     private String path;
-
-    public Image() {
+  
+    public ImageConverter() {
         // do nothing
     }
     
-    public Image(String path) {
+    public ImageConverter(String path) {
         this.path = path;
     }
     
@@ -48,7 +50,7 @@ public class Image {
                 bos = new ByteOutputStream();
                 ImageIO.write(bufferedImage, "png", bos);
             } catch (IOException ex) {
-                Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ImageConverter.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     bos.close();
@@ -57,16 +59,32 @@ public class Image {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImageConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bos == null ? null : bos.getBytes();
     }
     
+    public BufferedImage convertToBufferedImage(byte[] bytes) {
+        BufferedImage bImageFromConvert = null;
+        try {
+            InputStream in = new ByteArrayInputStream(bytes);
+            bImageFromConvert = ImageIO.read(in);
+        } catch (IOException ex) {
+            Logger.getLogger(ImageConverter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bImageFromConvert;
+    }
+    
     public static void main(String args[]) {
         String path = "Mushroom.png";
-        Image image = new Image(path);
+        ImageConverter image = new ImageConverter(path);
         byte[] bytes = image.extractByte();
-        System.out.println(Arrays.toString(bytes));
+        BufferedImage buff = image.convertToBufferedImage(bytes);
+        try {
+            ImageIO.write(buff, "bmp", new File("output.bmp"));
+        } catch (IOException ex) {
+            Logger.getLogger(ImageConverter.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
