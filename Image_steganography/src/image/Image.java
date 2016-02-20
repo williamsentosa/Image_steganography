@@ -11,8 +11,12 @@ import javax.imageio.ImageIO;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import java.awt.Graphics2D;
+import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -37,8 +41,8 @@ public class Image {
     public void setImage(String path) {
         this.path = path;
     }
-    
-    /**
+
+    /** 
      * Convert image with the set path into bytes
      * @return bytes of image
      */
@@ -95,15 +99,48 @@ public class Image {
         osf.flush();
     }
     
+    public void splitImage(BufferedImage img) throws IOException {
+        int chunksWidth = 8;
+        int chunksHeight = 8;
+        int rows = img.getWidth() / chunksHeight;
+        int cols = img.getHeight() / chunksWidth;
+        int chunks = rows * cols;
+        
+        int count = 0;
+        
+        BufferedImage images[] = new BufferedImage[chunks];
+        for (int x = 0; x < rows; x++) {  
+            for (int y = 0; y < cols; y++) {  
+                //Initialize the image array with image chunks  
+                images[count] = new BufferedImage(chunksWidth, chunksHeight, img.getType());  
+  
+                // draws the image chunk  
+                Graphics2D gr = images[count++].createGraphics();  
+                gr.drawImage(img, 0, 0, chunksWidth, chunksHeight, chunksWidth * y, chunksHeight * x, chunksWidth * y + chunksWidth, chunksHeight * x + chunksHeight, null);  
+                gr.dispose();  
+            }  
+        }  
+        System.out.println("Splitting done" + images.length); 
+        
+        //Write mini images to image file
+       
+        for (int i = 0; i < images.length; i++) {  
+            ImageIO.write(images[i], "jpg", new File("img" + i + ".jpg"));  
+        }  
+        System.out.println("Mini images created");  
+    }
+    
     public static void main(String args[]) throws IOException {
-        String path = "Mushroom.PNG";
+        String path = "img174.jpg";
         Image image = new Image(path);
-        //byte[] bytes = image.extractByte();
-        //System.out.println(Arrays.toString(bytes));
-        String encodedString = image.encodedBase64();
+        byte[] bytes = image.extractByte();
+        System.out.println(Arrays.toString(bytes));
+        //image.splitImage(ImageIO.read(new File(path)));
+        /*String encodedString = image.encodedBase64();
+        encodedString = encodedString;
         System.out.println(image.encodedBase64());
         
-        image.base64ToImage(encodedString, "Mushroom_res.png");
+        image.base64ToImage(encodedString, "Mushroom_res.png");*/
     }
     
 }
