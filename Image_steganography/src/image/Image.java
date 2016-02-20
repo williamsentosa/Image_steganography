@@ -123,18 +123,20 @@ public class Image {
         System.out.println("Splitting done" + images.length); 
         
         //Write mini images to image file
-       
+       /*
         for (int i = 0; i < images.length; i++) {  
             ImageIO.write(images[i], "jpg", new File("img" + i + ".jpg"));  
         }  
-        System.out.println("Mini images created");  
+        System.out.println("Mini images created");  */
     }
     
     public static void main(String args[]) throws IOException {
-        String path = "img174.jpg";
+        String path = "Mushroom.png";
         Image image = new Image(path);
         byte[] bytes = image.extractByte();
         System.out.println(Arrays.toString(bytes));
+        ByteConverter bc = new ByteConverter();
+        bc.printBitArray(bc.byteToBit(-119));
         //image.splitImage(ImageIO.read(new File(path)));
         /*String encodedString = image.encodedBase64();
         encodedString = encodedString;
