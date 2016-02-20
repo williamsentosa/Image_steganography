@@ -63,7 +63,7 @@ public class Image {
     }
     
     public static void main(String args[]) {
-        String path = "Mushroom.png";
+        String path = "Mushroom.PNG";
         Image image = new Image(path);
         byte[] bytes = image.extractByte();
         System.out.println(Arrays.toString(bytes));
