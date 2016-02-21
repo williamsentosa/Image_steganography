@@ -15,6 +15,7 @@ import java.awt.Graphics2D;
 import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 import processor.ByteConverter;
@@ -131,6 +132,20 @@ public class Image {
         System.out.println("Mini images created");  */
     }
     
+    private double countRootMeanSquare(Byte[][] coverImageBytes, Byte[][] stegoImageBytes) {
+        double rms = 0, sum = 0;
+        
+        for (int i = 0; i < coverImageBytes.length; i++) {
+            for (int j = 0; j < coverImageBytes[i].length; j++) {
+                sum = sum + Math.pow(coverImageBytes[i][j] - stegoImageBytes[i][j], 2);
+            }
+        }
+        
+        rms = Math.sqrt(sum / ((double) coverImageBytes.length * (double) coverImageBytes[0].length));
+        
+        return rms;
+    }
+    
     public static void main(String args[]) throws IOException {
         String path = "Mushroom.png";
         Image image = new Image(path);
@@ -140,7 +155,7 @@ public class Image {
         bc.printBitArray(bc.byteToBit(-119));
         
         char b = '0';
-        System.out.println("result : " + c | b);
+//        System.out.println("result : " + c | b);
 
         //image.splitImage(ImageIO.read(new File(path)));
         /*String encodedString = image.encodedBase64();
