@@ -138,6 +138,10 @@ public class Image {
         System.out.println(Arrays.toString(bytes));
         ByteConverter bc = new ByteConverter();
         bc.printBitArray(bc.byteToBit(-119));
+        
+        char b = '0';
+        System.out.println("result : " + c | b);
+
         //image.splitImage(ImageIO.read(new File(path)));
         /*String encodedString = image.encodedBase64();
         encodedString = encodedString;

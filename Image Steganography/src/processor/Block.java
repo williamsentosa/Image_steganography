@@ -28,7 +28,7 @@ public class Block {
         this.bytes = bytes;
     }
     
-//    public Bitmap[] convertToBitmap() {
+//    public byte[] convertToBitmap() {
 //        
 //    }
 }
