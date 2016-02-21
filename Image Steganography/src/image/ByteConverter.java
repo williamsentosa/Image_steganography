@@ -27,15 +27,30 @@ public class ByteConverter {
         }
            
         for (int i = 1; i <= 8; i++) {
-            if (b > twoPower(8-i)) {
+            if (b >= twoPower(8-i)) {
                 bit[i-1] = 1;
                 b -= twoPower(8-i);
+                //System.out.print(twoPower(8-i) + " ");
+                
             }
             if (b == 0) 
                 break;
         }
+        //System.out.println();
         
         return bit;
+    }
+    
+    public int bitToByte(int[] bit) {
+        int res = 0;
+        for (int i = 1; i <= bit.length ; i++) {
+            if (bit[i-1] == 1) {
+                res += twoPower(8-i); 
+                //System.out.print(twoPower(8-i)+ " ");
+            }
+        }
+        //System.out.println();
+        return res;
     }
     
     public void printBitArray(int[] bit) {
@@ -43,5 +58,13 @@ public class ByteConverter {
             System.out.print(bit[i]);
         }
         System.out.println();
+    }
+    
+    public static void main (String[] args) {
+        ByteConverter bc = new ByteConverter();
+        System.out.println(bc.twoPower(0));
+        bc.printBitArray(bc.byteToBit(110));
+        System.out.println(bc.bitToByte(bc.byteToBit(110)));
+        
     }
 }
