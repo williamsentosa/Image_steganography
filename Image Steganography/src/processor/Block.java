@@ -50,16 +50,27 @@ public class Block {
         
     }
     
-    private byte convertBitsToByte(Bit[] bits) {
-        byte result = 0;
-        return result;
+    private int twoPower (int i) {
+        int res = 1;
+        for (int j = 0; j < i; j++) {
+            res *= 2;
+        }
+        return res;
     }
+    
+    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        Block block = new Block();
+        Bit[] bits = new Bit[8];
+        
+        
+        
     }
     
 }

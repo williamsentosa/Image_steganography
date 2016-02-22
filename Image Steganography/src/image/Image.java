@@ -200,7 +200,7 @@ public class Image {
         byte[] bytes = image.extractByte();
         System.out.println(Arrays.toString(bytes));
         ByteConverter bc = new ByteConverter();
-        bc.printBitArray(bc.byteToBit(-119));
+        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-119")));
         
         char b = '0';
 //        System.out.println("result : " + c | b);

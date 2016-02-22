@@ -20,42 +20,44 @@ public class ByteConverter {
         return res;
     }
     
-    public int[] byteToBit(int b) {
-        int[] bit = new int[8];
+    private byte convertBitsToByte(Bit[] bits) {
+        byte result = 0;
+        for (int i = 1; i <= bits.length ; i++) {
+            if (bits[i-1].getValue() == true) {
+                result += twoPower(8-i);
+            }
+        }
+        return result;
+    }
+    
+    public Bit[] convertByteToBits(byte b) {
+        Bit[] bits = new Bit[8];
+        
+        for (int i = 0; i < bits.length; i++) {
+            bits[i] = new Bit();
+        }
+         
         if (b < 0) {
             b += 256;
         }
            
         for (int i = 1; i <= 8; i++) {
             if (b >= twoPower(8-i)) {
-                bit[i-1] = 1;
+                bits[i-1].setValue(true);
                 b -= twoPower(8-i);
-                //System.out.print(twoPower(8-i) + " ");
-                
+                //System.out.print(twoPower(8-i) + " ");        
             }
             if (b == 0) 
                 break;
         }
         //System.out.println();
         
-        return bit;
+        return bits;
     }
     
-    public int bitToByte(int[] bit) {
-        int res = 0;
-        for (int i = 1; i <= bit.length ; i++) {
-            if (bit[i-1] == 1) {
-                res += twoPower(8-i); 
-                //System.out.print(twoPower(8-i)+ " ");
-            }
-        }
-        //System.out.println();
-        return res;
-    }
-    
-    public void printBitArray(int[] bit) {
+    public void printBitArray(Bit[] bits) {
         for (int i = 0; i < 8; i++) {
-            System.out.print(bit[i]);
+            System.out.print(bits[i].getValue()+" ");
         }
         System.out.println();
     }
@@ -63,8 +65,8 @@ public class ByteConverter {
     public static void main (String[] args) {
         ByteConverter bc = new ByteConverter();
         System.out.println(bc.twoPower(0));
-        bc.printBitArray(bc.byteToBit(110));
-        System.out.println(bc.bitToByte(bc.byteToBit(110)));
+        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("110")));
+        System.out.println(bc.convertBitsToByte(bc.convertByteToBits(Byte.parseByte("110"))));
         
     }
 }
