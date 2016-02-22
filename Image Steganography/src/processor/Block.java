@@ -13,6 +13,7 @@ public class Block {
     // Atribut
     private byte[][] bytes;
     private Bitplane[] bitplanes;
+    private ByteConverter byteConverter;
     
     // Konstruktor
     public Block() {
@@ -42,24 +43,42 @@ public class Block {
     }
     
     // Method
-    public Bitplane[] convertToBitplanes() {
-        return new Bitplane[0];
-    }
-    
-    public void deconvertFromBitplanes(Bitplane[] bitplanes) {
-        
-    }
-    
-    private int twoPower (int i) {
-        int res = 1;
-        for (int j = 0; j < i; j++) {
-            res *= 2;
+    public Bitplane[] convertToBitplanes(byte[][] matrixOfBytes) {
+        Bitplane[] bitplaneResult = new Bitplane[8];
+        for (int i = 0; i < bitplaneResult.length; i ++) {
+            bitplaneResult[i] = new Bitplane();
         }
-        return res;
+        for (int i = 0; i < matrixOfBytes.length; i++) {
+            for (int j = 0; j < matrixOfBytes[i].length; j++) {
+                Bit[] tempBit = new Bit[8];
+                tempBit = byteConverter.convertByteToBits(matrixOfBytes[i][j]);
+                for (int k = 0; k < bitplaneResult.length; k++) {
+                    bitplaneResult[k].setBitsBasedOnPosition(i, j, tempBit[k]);
+                }
+            }
+        }
+        
+        return bitplaneResult;
     }
     
+    public byte[][] deconvertFromBitplanes(Bitplane[] bitplanes) {
+        int row = bitplanes[0].getBitRow();
+        int col = bitplanes[0].getBitColumn();
+        byte[][] bytesResult = new byte[row][col];
+        Bit[] bitTemp = new Bit[8];
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                for (int k = 0; k < 8; k++) {
+                    bitTemp[k] = bitplanes[k].getBitsBasedOnPosition(i, j);
+                }
+                bytesResult[i][j] = byteConverter.convertBitsToByte(bitTemp);
+            }
+        }
+        
+        return bytesResult;
+    }
     
-
     /**
      * @param args the command line arguments
      */

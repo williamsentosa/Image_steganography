@@ -20,7 +20,7 @@ public class ByteConverter {
         return res;
     }
     
-    private byte convertBitsToByte(Bit[] bits) {
+    public byte convertBitsToByte(Bit[] bits) {
         byte result = 0;
         for (int i = 1; i <= bits.length ; i++) {
             if (bits[i-1].getValue() == true) {
