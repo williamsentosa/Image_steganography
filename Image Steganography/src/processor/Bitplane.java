@@ -11,16 +11,17 @@ package processor;
  */
 public class Bitplane {
     // Atribut
-    Bit[][] bits;
+    private Bit[][] bits;
+    private final int size = 8;
     
     // Konstruktor
     public Bitplane() {
-        bits = new Bit[8][8];
+        bits = new Bit[size][size];
     }
     
     public Bitplane(int number) {
         // Ngubah number ke bits
-        bits = new Bit[8][8];
+        bits = new Bit[size][size];
     }
     
     // Getter
@@ -30,10 +31,7 @@ public class Bitplane {
     
     // Setter
     public void setBits(Bit[][] bits) {
-        this.bits = new Bit[bits.length][bits[0].length];
-        for (int i = 0; i < bits.length; i++) {
-            System.arraycopy(bits[i], 0, this.bits[i], 0, bits[i].length);
-        }
+        this.bits = bits;
     }
     
     // Method
@@ -53,11 +51,8 @@ public class Bitplane {
         
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
     }
     
 }

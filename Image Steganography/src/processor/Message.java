@@ -32,4 +32,8 @@ public class Message {
         // konversi bitplanes ke message
     }
     
+    public static void main(String[] args) {
+        // TODO code application logic here
+    }
+    
 }
