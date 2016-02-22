@@ -23,6 +23,7 @@ convertToCGC();
 deconvertToPBC();
 boolean isNoisy();
 conjugate();
+addBit();
 
 4. Message
 byte[] message;
@@ -36,6 +37,7 @@ int convertToInt();
 6. ConjugationTable
 bitplane[] bitplanes;
 ConjugationTable(int msgSize)
+addSign();
 
 7. InformationRegion
 bitplane conjugationTableElement;
