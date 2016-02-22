@@ -17,7 +17,9 @@ import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import processor.ByteConverter;
 import sun.misc.BASE64Decoder;
+
 
 /**
  *
