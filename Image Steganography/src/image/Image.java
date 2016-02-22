@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.awt.Graphics2D;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -65,10 +67,85 @@ public class Image {
     }
     
     // Method
-    public void setImage(String path) {
+    public void getBytesFromImage(String path) {
         // Masukkin ke bytes
+        try {
+            File imgPath = new File(path);
+            BufferedImage bufferedImage = ImageIO.read(imgPath);
+            
+            WritableRaster raster = bufferedImage .getRaster();
+            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
+            byte[] dataByte = data.getData();
+            int rows = bufferedImage.getWidth();
+            int cols = bufferedImage.getHeight();
+            bytes = new byte[rows][cols];
+            for(int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    bytes[i][j] = dataByte[j+i*cols];
+                }
+            }
+           
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
+    public BufferedImage convertBytesToBufferedImage(byte[][] bytes) {
+        BufferedImage bImageFromConvert = null;
+        try {
+            byte[] byteTemp = new byte[(bytes.length)*(bytes[0].length)];
+            for (int i = 0; i < bytes.length; i++) {
+                for (int j = 0; j < bytes[0].length; j++) {
+                    byteTemp[j + i * bytes[0].length] = bytes[i][j];
+                }
+            }
+            InputStream in = new ByteArrayInputStream(byteTemp);
+            bImageFromConvert = ImageIO.read(in);
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bImageFromConvert;
+    }
+    
+    public Block[][] convertBytesToBlock() {
+        int blockSize = 8;
+        int rows = 0;
+        int byteRows = bytes[0].length;
+        int byteCols = bytes.length;
+        
+        if (byteRows % blockSize != 0) {
+            byteRows = byteRows - byteRows % blockSize + blockSize;
+        } 
+        
+        if (byteCols % blockSize != 0) {
+            byteCols = byteCols - byteCols % blockSize + blockSize;
+        } 
+        
+        //Inisialisasi tempBytes
+        byte[][] tempBytes = new byte[byteRows][byteCols];
+        for (int i = 0; i < bytes.length; i++) {
+            for (int j = 0; j < bytes[0].length; j++) {
+                tempBytes[i][j] = bytes[i][j];
+            }
+        }
+        
+        Block[][] blockResult = new Block[byteRows/blockSize][byteCols/blockSize];
+        for (int i = 0; i < byteRows/blockSize; i++) {
+            for(int j = 0; j < byteCols/blockSize; j++) {
+                blockResult[i][j] = new Block();
+                for (int k = 0; k < blockSize; k++) {
+                    for (int l = 0; l < blockSize; l++) {
+                        
+                    }
+                }
+            }
+        }
+        
+        return blockResult;
+    }
+    
+    //COBA-COBA
     /** 
      * Convert image with the set path into bytes
      * @return bytes of image
@@ -96,46 +173,7 @@ public class Image {
         return bos == null ? null : bos.getBytes();
     }
     
-    public BufferedImage convertToBufferedImage(byte[] bytes) {
-        BufferedImage bImageFromConvert = null;
-        try {
-            InputStream in = new ByteArrayInputStream(bytes);
-            bImageFromConvert = ImageIO.read(in);
-        } catch (IOException ex) {
-            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return bImageFromConvert;
-    }
     
-    /**
-     * Convert image with the set path into Base64
-     * @return encodedBase64String
-     */
-    public String encodedBase64 () {
-        String encodedImage = "";
-        try {
-            BufferedImage bufImage;
-            bufImage = ImageIO.read(new File(path));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bufImage, "png", baos);
-            encodedImage = Base64.encode(baos.toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return encodedImage;
-    }
-    
-    /**
-     * Convert Base64 String into Image
-     * @param encodedBased64String, resultPath
-     */
-    public void base64ToImage (String encodedString, String resultPath) throws IOException {
-        byte[] btDataFile = new sun.misc.BASE64Decoder().decodeBuffer(encodedString);
-        File of = new File(resultPath);
-        FileOutputStream osf = new FileOutputStream(of);
-        osf.write(btDataFile);
-        osf.flush();
-    }
     
     public void splitImage(BufferedImage img) throws IOException {
         int chunksWidth = 8;

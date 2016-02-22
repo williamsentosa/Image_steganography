@@ -7,7 +7,7 @@ package processor;
 
 /**
  *
- * @author angelynz95
+ * @author Candy Olivia Mawalim
  */
 public class Block {
     // Atribut
