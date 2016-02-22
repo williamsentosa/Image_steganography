@@ -29,7 +29,7 @@ public class Bitplane {
     }
     
     // Setter
-    public setBits(Bit[][] bits) {
+    public void setBits(Bit[][] bits) {
         this.bits = new Bit[bits.length][bits[0].length];
         for (int i = 0; i < bits.length; i++) {
             System.arraycopy(bits[i], 0, this.bits[i], 0, bits[i].length);

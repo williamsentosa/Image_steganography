@@ -1,4 +1,4 @@
-package image;
+package processor;
 
 /**
  *
@@ -24,7 +24,8 @@ public class Message {
     }
     
     public Bitplane[] convertToBitplane() {
-        // konversi message ke bitplane
+        Bitplane[] result = new Bitplane[0];
+        return result;
     }
     
     public void deconvertFromBitplane(Bitplane[] bitplanes) {

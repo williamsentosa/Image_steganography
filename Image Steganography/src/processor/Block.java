@@ -51,7 +51,8 @@ public class Block {
     }
     
     private byte convertBitsToByte(Bit[] bits) {
-        
+        byte result = 0;
+        return result;
     }
 
     /**

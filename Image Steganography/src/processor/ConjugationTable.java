@@ -1,4 +1,4 @@
-package image;
+package processor;
 
 /**
  *
@@ -25,12 +25,12 @@ public class ConjugationTable {
         } else {
             size = msgSize/8 + 1;
         }
-        Bitplanes = new Bitplane[size];
+        bitplanes = new Bitplane[size];
         x = 0;
         y = 0;
     }
     
-    public setBitplanes(Bitplane[] bitplanes) {
+    public void setBitplanes(Bitplane[] bitplanes) {
         this.bitplanes = bitplanes;
     }
     
@@ -38,7 +38,7 @@ public class ConjugationTable {
      * add bit to bitplanes
      * @param bit added bit
      */
-    public addSign(Bit bit) {
+    public void addSign(Bit bit) {
         
     }
     
