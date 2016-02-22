@@ -7,28 +7,58 @@ package processor;
 
 /**
  *
- * @author William Sentosa
+ * @author angelynz95
  */
 public class Block {
+    // Atribut
     private byte[][] bytes;
+    private Bitplane[] bitplanes;
     
+    // Konstruktor
     public Block() {
         
     }
     
-    public Block(byte[] arrImage) {
-        
-    }
-    
+    // Getter
     public byte[][] getBytes() {
         return bytes;
     }
     
-    public void setBytes(byte[][] bytes) {
-        this.bytes = bytes;
+    public Bitplane[] getBitplanes() {
+        return bitplanes;
     }
     
-//    public byte[] convertToBitmap() {
-//        
-//    }
+    // Setter
+    public void setBytes(byte[][] bytes) {
+        this.bytes = new byte[bytes.length][bytes[0].length];
+        for (int i = 0; i < bytes.length; i++) {
+            System.arraycopy(bytes[i], 0, this.bytes[i], 0, bytes[i].length);
+        }
+    }
+    
+    public void setBitplanes(Bitplane[] bitplanes) {
+        this.bitplanes = new Bitplane[bitplanes.length];
+        System.arraycopy(bitplanes, 0, this.bitplanes, 0, bitplanes.length);
+    }
+    
+    // Method
+    public Bitplane[] convertToBitplanes() {
+        return new Bitplane[0];
+    }
+    
+    public void deconvertFromBitplanes(Bitplane[] bitplanes) {
+        
+    }
+    
+    private byte convertBitsToByte(Bit[] bits) {
+        
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+    }
+    
 }

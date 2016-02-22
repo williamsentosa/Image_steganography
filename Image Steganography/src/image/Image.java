@@ -15,8 +15,11 @@ import java.awt.Graphics2D;
 import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import processor.Block;
 import processor.ByteConverter;
 import sun.misc.BASE64Decoder;
 
@@ -25,8 +28,11 @@ import sun.misc.BASE64Decoder;
  * @author William Sentosa
  */
 public class Image {
+    // Atribut
+    private byte[][] bytes;
     private String path;
 
+    // Konstruktor
     public Image() {
         // do nothing
     }
@@ -35,12 +41,34 @@ public class Image {
         this.path = path;
     }
     
+    // Getter
+    public byte[][] getBytes() {
+        return bytes;
+    }
+    
+    public String getPath() {
+        return path;
+    }
+    
+    // Setter
+    public void setBytes(byte[][] bytes) {
+        this.bytes = new byte[bytes.length][bytes[0].length];
+        for (int i = 0; i < bytes.length; i++) {
+            System.arraycopy(bytes[i], 0, this.bytes[i], 0, bytes[i].length);
+        }
+    }
+    
     /**
      * Setting image path
      * @param path image path
      */
-    public void setImage(String path) {
+    public void setPath(String path) {
         this.path = path;
+    }
+    
+    // Method
+    public void setImage(String path) {
+        // Masukkin ke bytes
     }
 
     /** 
@@ -68,6 +96,17 @@ public class Image {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bos == null ? null : bos.getBytes();
+    }
+    
+    public BufferedImage convertToBufferedImage(byte[] bytes) {
+        BufferedImage bImageFromConvert = null;
+        try {
+            InputStream in = new ByteArrayInputStream(bytes);
+            bImageFromConvert = ImageIO.read(in);
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bImageFromConvert;
     }
     
     /**
@@ -131,6 +170,32 @@ public class Image {
         System.out.println("Mini images created");  */
     }
     
+    public Block[][] convertToBlocks() {
+        return new Block[8][8];
+    }
+    
+    public void deconvertFromBlocks(Block[][] blocks) {
+        
+    }
+    
+    public double checkImageQuality(Image comparisonImage) {
+        return 0;
+    }
+    
+    private double countRootMeanSquare(Byte[][] coverImageBytes, Byte[][] stegoImageBytes) {
+        double rms = 0, sum = 0;
+        
+        for (int i = 0; i < coverImageBytes.length; i++) {
+            for (int j = 0; j < coverImageBytes[i].length; j++) {
+                sum = sum + Math.pow(coverImageBytes[i][j] - stegoImageBytes[i][j], 2);
+            }
+        }
+        
+        rms = Math.sqrt(sum / ((double) coverImageBytes.length * (double) coverImageBytes[0].length));
+        
+        return rms;
+    }
+    
     public static void main(String args[]) throws IOException {
         String path = "Mushroom.png";
         Image image = new Image(path);
@@ -140,7 +205,7 @@ public class Image {
         bc.printBitArray(bc.byteToBit(-119));
         
         char b = '0';
-        
+//        System.out.println("result : " + c | b);
 
         //image.splitImage(ImageIO.read(new File(path)));
         /*String encodedString = image.encodedBase64();
