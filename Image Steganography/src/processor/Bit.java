@@ -38,13 +38,18 @@ public class Bit {
             return 0;
     }
     
+    public boolean isSameAs(Bit b) {
+        return value == b.getValue();
+    }
+    
     public static void main(String[] args) {
         Bit b = new Bit();
         b.setValue(true);
         System.out.println(b.convertToInt());
-        b.setValue(false);
+        b.setValue(true);
         System.out.println(b.convertToInt());
         Bit b2 = new Bit(true);
         System.out.println(b2.convertToInt());
+        System.out.println(b.isSameAs(b2));
     }
 }
