@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.awt.Graphics2D;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import processor.Block;
@@ -108,12 +105,13 @@ public class Image {
         return bImageFromConvert;
     }
     
-    public Block[][] convertBytesToBlock() {
+    public Block[][] convertBytesToBlocks() {
         int blockSize = 8;
         int rows = 0;
         int byteRows = bytes[0].length;
         int byteCols = bytes.length;
         
+        //defaultnya 0 jadi kalo dummy bytenya 0
         if (byteRows % blockSize != 0) {
             byteRows = byteRows - byteRows % blockSize + blockSize;
         } 
@@ -134,15 +132,33 @@ public class Image {
         for (int i = 0; i < byteRows/blockSize; i++) {
             for(int j = 0; j < byteCols/blockSize; j++) {
                 blockResult[i][j] = new Block();
+                byte[][] byteToBlock = new byte[8][8];
                 for (int k = 0; k < blockSize; k++) {
                     for (int l = 0; l < blockSize; l++) {
-                        
+                        byteToBlock[k][l] = tempBytes[k][l];
                     }
                 }
+                blockResult[i][j].setBytes(byteToBlock);
             }
         }
         
         return blockResult;
+    }
+    
+    public void convertBlocksToBytes(Block[][] blocks) {
+        int rows = blocks.length * 8;
+        int cols = blocks[0].length * 8;
+                
+        byte[][] byteTemp = new byte[rows][cols];
+        
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[0].length; j++) {
+                for (int k = 0; k < 8; k++) {
+                    byteTemp[i][j*8+k] = blocks[i][j].getBytesBasedOnPosition(i,k);
+                }
+            }
+        }
+        
     }
     
     //COBA-COBA
@@ -204,18 +220,6 @@ public class Image {
             ImageIO.write(images[i], "jpg", new File("img" + i + ".jpg"));  
         }  
         System.out.println("Mini images created");  */
-    }
-    
-    public Block[][] convertToBlocks() {
-        return new Block[8][8];
-    }
-    
-    public void deconvertFromBlocks(Block[][] blocks) {
-        
-    }
-    
-    public double checkImageQuality(Image comparisonImage) {
-        return 0;
     }
     
     private double countRootMeanSquare(Byte[][] coverImageBytes, Byte[][] stegoImageBytes) {
