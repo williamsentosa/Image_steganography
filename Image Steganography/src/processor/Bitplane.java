@@ -24,11 +24,17 @@ public class Bitplane {
         return bits;
     }
     
+    public Bit getBitsBasedOnPosition (int row, int col) {
+        return bits[row][col];
+    }
+    
     // Setter
     public void setBits(Bit[][] bits) {
         this.bits = bits;
     }
     
+    public void setBitsBasedOnPosition (int col, int row, Bit bit) {
+        this.bits[col][row] = bit;
     public int getSize() {
         return size;
     }
@@ -44,6 +50,14 @@ public class Bitplane {
     }
     
     // Method
+    public int getBitColumn() {
+        return bits.length;
+    }
+    
+    public int getBitRow() {
+        return bits[0].length;
+    }
+            
     public void convertToCGC() {
         Bit[][] temp = copyBits(bits);
         for(int i=1; i<size; i++) {
