@@ -15,6 +15,7 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import javax.swing.JFrame;
 import processor.Block;
 
 import processor.ByteConverter;
@@ -64,7 +65,7 @@ public class Image {
     }
     
     // Method
-    public void getBytesFromImage(String path) {
+    public void getBytesFromImage() {
         // Masukkin ke bytes
         try {
             File imgPath = new File(path);
@@ -88,7 +89,7 @@ public class Image {
         
     }
 
-    public BufferedImage convertBytesToBufferedImage(byte[][] bytes) {
+    public BufferedImage convertBytesToBufferedImage() {
         BufferedImage bImageFromConvert = null;
         try {
             byte[] byteTemp = new byte[(bytes.length)*(bytes[0].length)];
@@ -96,6 +97,10 @@ public class Image {
                 for (int j = 0; j < bytes[0].length; j++) {
                     byteTemp[j + i * bytes[0].length] = bytes[i][j];
                 }
+            }
+            
+            for (int i = 0; i < byteTemp.length; i++) {
+                System.out.print(byteTemp[i] + " ");
             }
             InputStream in = new ByteArrayInputStream(byteTemp);
             bImageFromConvert = ImageIO.read(in);
@@ -113,7 +118,9 @@ public class Image {
         
         //defaultnya 0 jadi kalo dummy bytenya 0
         if (byteRows % blockSize != 0) {
+            System.out.println(byteRows);
             byteRows = byteRows - byteRows % blockSize + blockSize;
+            System.out.println(byteRows);
         } 
         
         if (byteCols % blockSize != 0) {
@@ -130,7 +137,7 @@ public class Image {
         
         Block[][] blockResult = new Block[byteRows/blockSize][byteCols/blockSize];
         for (int i = 0; i < byteRows/blockSize; i++) {
-            for(int j = 0; j < byteCols/blockSize; j++) {
+            for (int j = 0; j < byteCols/blockSize; j++) {
                 blockResult[i][j] = new Block();
                 byte[][] byteToBlock = new byte[8][8];
                 for (int k = 0; k < blockSize; k++) {
@@ -143,6 +150,24 @@ public class Image {
         }
         
         return blockResult;
+    }
+    
+    public void printSingleBlock(Block block) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(block.getBytesBasedOnPosition(i, j) + " ");
+            }
+            System.out.println();
+        }
+    }
+    
+    public void printBlockMatrix(Block[][] blocks) {
+        for (int i = 0; i < blocks.length; i++) {
+            for (int j = 0; j < blocks[0].length; j++) {
+                System.out.println((i+1)*(j+1));
+                printSingleBlock(blocks[i][j]);
+            }
+        }
     }
     
     public void convertBlocksToBytes(Block[][] blocks) {
@@ -221,38 +246,28 @@ public class Image {
         }  
         System.out.println("Mini images created");  */
     }
+   
     
-    private double countRootMeanSquare(Byte[][] coverImageBytes, Byte[][] stegoImageBytes) {
-        double rms = 0, sum = 0;
-        
-        for (int i = 0; i < coverImageBytes.length; i++) {
-            for (int j = 0; j < coverImageBytes[i].length; j++) {
-                sum = sum + Math.pow(coverImageBytes[i][j] - stegoImageBytes[i][j], 2);
+    public void printBytes() {
+        for (int i = 0; i < bytes.length; i++) {
+            for (int j = 0 ; j < bytes[i].length; j++) {
+                System.out.print(bytes[i][j] + " ");
             }
+            System.out.println();
         }
-        
-        rms = Math.sqrt(sum / ((double) coverImageBytes.length * (double) coverImageBytes[0].length));
-        
-        return rms;
     }
     
     public static void main(String args[]) throws IOException {
         String path = "Mushroom.png";
-        Image image = new Image(path);
-        byte[] bytes = image.extractByte();
-        System.out.println(Arrays.toString(bytes));
-        ByteConverter bc = new ByteConverter();
-        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-119")));
+        Image img = new Image(path);
+        img.getBytesFromImage();
+        //img.printBytes();
         
-        char b = '0';
-//        System.out.println("result : " + c | b);
-
-        //image.splitImage(ImageIO.read(new File(path)));
-        /*String encodedString = image.encodedBase64();
-        encodedString = encodedString;
-        System.out.println(image.encodedBase64());
+        //System.out.println(img.convertBytesToBufferedImage());
         
-        image.base64ToImage(encodedString, "Mushroom_res.png");*/
+        img.printBlockMatrix(img.convertBytesToBlocks());
+        
+        
     }
     
 }
