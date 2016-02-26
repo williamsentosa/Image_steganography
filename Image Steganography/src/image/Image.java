@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import processor.Block;
 
 import processor.ByteConverter;
+import processor.Pixel;
 
 
 /**
@@ -30,7 +31,8 @@ public class Image {
     private byte[][] bytes;
     private String path;
     private int pixelSize;
-
+    private Pixel[][] pixels;
+            
     // Konstruktor
     public Image() {
         // do nothing
@@ -78,7 +80,11 @@ public class Image {
             for (int i = 0; i < image.getHeight(); i++) {
                 for (int j = 0; j < image.getWidth(); j++) {
                     int color = image.getRGB(i, j);
-                    System.out.print(color + " ");
+                    //System.out.print(color + " ");
+                    int red = (color >> 16) & 0xFF;
+                    int green = (color >> 8) & 0xFF;
+                    int blue = color & 0xFF;
+                    System.out.print(red +"," + green + "," + blue + " ");
                 }
                 System.out.println();
             }
@@ -86,44 +92,30 @@ public class Image {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void getBytesFromImage() {
+    public void convertImageToBlock() {
         // Masukkin ke bytes
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage = ImageIO.read(imgPath);
             pixelSize = bufferedImage.getColorModel().getPixelSize();
             
-            
             WritableRaster raster = bufferedImage .getRaster();
-            DataBufferByte dataL   = (DataBufferByte) raster.getDataBuffer();
-            byte[] dataByte = dataL.getData();
-            
-            ByteArrayInputStream bais = new ByteArrayInputStream(dataByte);
-            try {
-                BufferedImage img = ImageIO.read(bais);
-                ImageIO.write(img, "png", new File("mush.png"));  
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
+            byte[] dataByte = data.getData();
             
             int rows = bufferedImage.getHeight();
             int cols = bufferedImage.getWidth();
             System.out.println(dataByte.length + " " + rows + " " + cols);
-            bytes = new byte[rows][cols];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    System.out.print((j+i*cols)+" ");
-                    System.out.println(dataByte[j+i*cols] + " ");
+                    pixels[i][j] = new Pixel(pixelSize);
+                    byte[] byteTemp = new byte[pixelSize/8];
+                    for (int k = 0; k < pixelSize/8; k++) {
+                        byteTemp[k] = dataByte[j+i*cols];
+                    }
+                    pixels[i][j].setBytes(byteTemp);
                 }
-                System.out.println();
             }
-            /*
-            for(int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    bytes[i][j] = data[j+i*cols];
-                }
-            }*/
-           
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -313,7 +305,9 @@ public class Image {
     public static void main(String args[]) throws IOException {
         String path = "Mushroom.png";
         Image img = new Image(path);
-        img.convertImageToPixel();
+        img.convertImageToBlock();
+        //img.convertImageToPixel();
+        
         //img.getBytesFromImage();
         //img.extractByte();
         //img.printBytes();
