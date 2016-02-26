@@ -70,12 +70,29 @@ public class Image {
     }
     
     // Method
+    public void convertImageToPixel() {
+        try {
+            File imagePath = new File(path);
+            BufferedImage image = ImageIO.read(imagePath);
+            
+            for (int i = 0; i < image.getHeight(); i++) {
+                for (int j = 0; j < image.getWidth(); j++) {
+                    int color = image.getRGB(i, j);
+                    System.out.print(color + " ");
+                }
+                System.out.println();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public void getBytesFromImage() {
         // Masukkin ke bytes
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage = ImageIO.read(imgPath);
             pixelSize = bufferedImage.getColorModel().getPixelSize();
+            
             
             WritableRaster raster = bufferedImage .getRaster();
             DataBufferByte dataL   = (DataBufferByte) raster.getDataBuffer();
@@ -296,8 +313,9 @@ public class Image {
     public static void main(String args[]) throws IOException {
         String path = "Mushroom.png";
         Image img = new Image(path);
-        img.getBytesFromImage();
-        img.extractByte();
+        img.convertImageToPixel();
+        //img.getBytesFromImage();
+        //img.extractByte();
         //img.printBytes();
         //System.out.println(img.extractByte());
         
