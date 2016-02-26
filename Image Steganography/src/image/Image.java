@@ -75,15 +75,20 @@ public class Image {
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage = ImageIO.read(imgPath);
-            ByteOutputStream bos  = new ByteOutputStream();
-            ImageIO.write(bufferedImage, "png", bos);
             pixelSize = bufferedImage.getColorModel().getPixelSize();
             
-            
-            byte[] data = bos.getBytes();
             WritableRaster raster = bufferedImage .getRaster();
             DataBufferByte dataL   = (DataBufferByte) raster.getDataBuffer();
             byte[] dataByte = dataL.getData();
+            
+            ByteArrayInputStream bais = new ByteArrayInputStream(dataByte);
+            try {
+                BufferedImage img = ImageIO.read(bais);
+                ImageIO.write(img, "png", new File("mush.png"));  
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            
             int rows = bufferedImage.getHeight();
             int cols = bufferedImage.getWidth();
             System.out.println(dataByte.length + " " + rows + " " + cols);
@@ -95,12 +100,12 @@ public class Image {
                 }
                 System.out.println();
             }
-            
+            /*
             for(int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     bytes[i][j] = data[j+i*cols];
                 }
-            }
+            }*/
            
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,7 +176,7 @@ public class Image {
                         byteToBlock[k][l] = tempBytes[k][l];
                     }
                 }
-                blockResult[i][j].setBytes(byteToBlock);
+                ///blockResult[i][j].setBytes(byteToBlock);
             }
         }
         
@@ -181,7 +186,7 @@ public class Image {
     public void printSingleBlock(Block block) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(block.getBytesBasedOnPosition(i, j) + " ");
+                //System.out.print(block.getBytesBasedOnPosition(i, j) + " ");
             }
             System.out.println();
         }
@@ -205,7 +210,7 @@ public class Image {
         for (int i = 0; i < blocks.length; i++) {
             for (int j = 0; j < blocks[0].length; j++) {
                 for (int k = 0; k < 8; k++) {
-                    byteTemp[i][j*8+k] = blocks[i][j].getBytesBasedOnPosition(i,k);
+                    //byteTemp[i][j*8+k] = blocks[i][j].getBytesBasedOnPosition(i,k);
                 }
             }
         }

@@ -11,7 +11,7 @@ package processor;
  */
 public class Block {
     // Atribut
-    private byte[][] bytes;
+    private Pixel[][] pixels;
     private Bitplane[] bitplanes;
     private ByteConverter byteConverter;
     
@@ -21,23 +21,19 @@ public class Block {
     }
     
     // Getter
-    public byte[][] getBytes() {
-        return bytes;
+    public Pixel[][] getPixels() {
+        return pixels;
     }
     
     public Bitplane[] getBitplanes() {
         return bitplanes;
     }
     
-    public byte getBytesBasedOnPosition(int row, int col) {
-        return bytes[row][col];
-    }
-    
     // Setter
-    public void setBytes(byte[][] bytes) {
-        this.bytes = new byte[bytes.length][bytes[0].length];
-        for (int i = 0; i < bytes.length; i++) {
-            System.arraycopy(bytes[i], 0, this.bytes[i], 0, bytes[i].length);
+    public void setPixels(Pixel[][] pixels) {
+        this.pixels = new Pixel[pixels.length][pixels[0].length];
+        for (int i = 0; i < pixels.length; i++) {
+            System.arraycopy(pixels[i], 0, this.pixels[i], 0, pixels[i].length);
         }
     }
     
@@ -52,10 +48,10 @@ public class Block {
         for (int i = 0; i < bitplaneResult.length; i ++) {
             bitplaneResult[i] = new Bitplane();
         }
-        for (int i = 0; i < bytes.length; i++) {
-            for (int j = 0; j < bytes[i].length; j++) {
+        for (int i = 0; i < pixels.length; i++) {
+            for (int j = 0; j < pixels[i].length; j++) {
                 Bit[] tempBit = new Bit[8];
-                tempBit = byteConverter.convertByteToBits(bytes[i][j]);
+                //tempBit = byteConverter.convertByteToBits(pixels[i][j]);
                 for (int k = 0; k < bitplaneResult.length; k++) {
                     bitplaneResult[k].setBitsBasedOnPosition(i, j, tempBit[k]);
                 }

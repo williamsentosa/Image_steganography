@@ -49,6 +49,7 @@ public class Pixel {
     }
     
     public void convertToBits() {
+        int numByte = size/8;
         
     }
     
