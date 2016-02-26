@@ -29,6 +29,7 @@ public class Image {
     // Atribut
     private byte[][] bytes;
     private String path;
+    private int pixelSize;
 
     // Konstruktor
     public Image() {
@@ -46,6 +47,10 @@ public class Image {
     
     public String getPath() {
         return path;
+    }
+
+    public int getPixelSize() {
+        return pixelSize;
     }
     
     // Setter
@@ -70,16 +75,30 @@ public class Image {
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage = ImageIO.read(imgPath);
+            ByteOutputStream bos  = new ByteOutputStream();
+            ImageIO.write(bufferedImage, "png", bos);
+            pixelSize = bufferedImage.getColorModel().getPixelSize();
             
+            
+            byte[] data = bos.getBytes();
             WritableRaster raster = bufferedImage .getRaster();
-            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-            byte[] dataByte = data.getData();
-            int rows = bufferedImage.getWidth();
-            int cols = bufferedImage.getHeight();
+            DataBufferByte dataL   = (DataBufferByte) raster.getDataBuffer();
+            byte[] dataByte = dataL.getData();
+            int rows = bufferedImage.getHeight();
+            int cols = bufferedImage.getWidth();
+            System.out.println(dataByte.length + " " + rows + " " + cols);
             bytes = new byte[rows][cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    System.out.print((j+i*cols)+" ");
+                    System.out.println(dataByte[j+i*cols] + " ");
+                }
+                System.out.println();
+            }
+            
             for(int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    bytes[i][j] = dataByte[j+i*cols];
+                    bytes[i][j] = data[j+i*cols];
                 }
             }
            
@@ -102,8 +121,15 @@ public class Image {
             for (int i = 0; i < byteTemp.length; i++) {
                 System.out.print(byteTemp[i] + " ");
             }
+            
             InputStream in = new ByteArrayInputStream(byteTemp);
+            
+            ImageIO.write(ImageIO.read(in),"png",new File("mush.png"));
             bImageFromConvert = ImageIO.read(in);
+            
+            if (in == null) {
+                System.out.println("AAAAAA");
+            }
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -196,6 +222,7 @@ public class Image {
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage = ImageIO.read(imgPath);
+            
             try {
                 bos = new ByteOutputStream();
                 ImageIO.write(bufferedImage, "png", bos);
@@ -208,6 +235,10 @@ public class Image {
                     
                 }
             }
+            //byte[] byteArray = bos.getBytes();
+            System.out.println(bos);
+            //BufferedImage bI = ImageIO.read(new ByteArrayInputStream(byteArray));
+            //ImageIO.write(bI,"png",new File("mush.png"));
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -261,11 +292,13 @@ public class Image {
         String path = "Mushroom.png";
         Image img = new Image(path);
         img.getBytesFromImage();
+        img.extractByte();
         //img.printBytes();
+        //System.out.println(img.extractByte());
         
-        //System.out.println(img.convertBytesToBufferedImage());
-        
-        img.printBlockMatrix(img.convertBytesToBlocks());
+        //System.out.println();
+        //ImageIO.write(img.convertBytesToBufferedImage(),"png",new File("mush.png"));
+        //img.printBlockMatrix(img.convertBytesToBlocks());
         
         
     }

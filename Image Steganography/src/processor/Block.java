@@ -47,15 +47,15 @@ public class Block {
     }
     
     // Method
-    public Bitplane[] convertToBitplanes(byte[][] matrixOfBytes) {
+    public Bitplane[] convertToBitplanes() {
         Bitplane[] bitplaneResult = new Bitplane[8];
         for (int i = 0; i < bitplaneResult.length; i ++) {
             bitplaneResult[i] = new Bitplane();
         }
-        for (int i = 0; i < matrixOfBytes.length; i++) {
-            for (int j = 0; j < matrixOfBytes[i].length; j++) {
+        for (int i = 0; i < bytes.length; i++) {
+            for (int j = 0; j < bytes[i].length; j++) {
                 Bit[] tempBit = new Bit[8];
-                tempBit = byteConverter.convertByteToBits(matrixOfBytes[i][j]);
+                tempBit = byteConverter.convertByteToBits(bytes[i][j]);
                 for (int k = 0; k < bitplaneResult.length; k++) {
                     bitplaneResult[k].setBitsBasedOnPosition(i, j, tempBit[k]);
                 }
