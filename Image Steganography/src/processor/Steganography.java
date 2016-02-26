@@ -36,7 +36,7 @@ public class Steganography {
         int bitSize = 0;
         for(int i=0; i<blocks.length; i++) {
             for(int j=0; j<blocks[i].length; j++) {
-                listBitplanes.add(blocks[i][j].convertToBitplanes());
+                //listBitplanes.add(blocks[i][j].convertToBitplanes());
             }
         }
         Bitplane[] messages = message.convertToBitplane();
