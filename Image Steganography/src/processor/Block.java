@@ -29,6 +29,10 @@ public class Block {
         return bitplanes;
     }
     
+    public byte getBytesBasedOnPosition(int row, int col) {
+        return bytes[row][col];
+    }
+    
     // Setter
     public void setBytes(byte[][] bytes) {
         this.bytes = new byte[bytes.length][bytes[0].length];
