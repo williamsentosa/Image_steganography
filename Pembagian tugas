@@ -18,7 +18,6 @@ Byte convertBitsToByte(Bit[] bits); //private
 
 3. Bitplane
 Bit[][] bits;
-Bitplane(int number); // ngubah number ke bits
 convertToCGC();
 deconvertToPBC();
 boolean isNoisy();
@@ -30,7 +29,7 @@ byte[] message;
 Bitplane[] convertToBitplane();
 deconvertFromBitplane(Bitplane[] bitplanes);
 
-5. Bit 
+5. Bit -- finished by william
 boolean value;
 int convertToInt();
 
@@ -39,6 +38,4 @@ bitplane[] bitplanes;
 ConjugationTable(int msgSize)
 addSign();
 
-7. InformationRegion
-bitplane conjugationTableElement;
-bitplane finalBitplane;
+

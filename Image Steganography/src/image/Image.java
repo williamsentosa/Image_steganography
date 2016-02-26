@@ -67,7 +67,7 @@ public class Image {
     }
     
     // Method
-    public void getBytesFromImage(String path) {
+    public void getBytesFromImage() {
         // Masukkin ke bytes
         try {
             File imgPath = new File(path);
