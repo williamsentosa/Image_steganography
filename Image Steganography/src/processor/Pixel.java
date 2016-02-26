@@ -92,4 +92,11 @@ public class Pixel {
         System.out.println();
     }
     
+    public void printPixel() {
+        System.out.println(size);
+        for (int i = 0; i < bytes.length; i++) {
+            System.out.println(bytes[i] + " ");
+        }
+    }
+    
 }
