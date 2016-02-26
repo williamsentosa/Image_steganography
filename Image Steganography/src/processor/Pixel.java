@@ -17,11 +17,13 @@ public class Pixel {
     public Pixel() {
         size = 0;
         bits = new Bit[size];
+        bytes = new byte[size/8];
     }
     
     public Pixel(int sizeInBit) {
         size = sizeInBit;
         bits = new Bit[size];
+        bytes = new byte[size/8];
     }
     
     public void setSize(int sizeInBit) {
@@ -49,12 +51,45 @@ public class Pixel {
     }
     
     public void convertToBits() {
-        int numByte = size/8;
-        
+        ByteConverter converter = new ByteConverter();
+        Bit[] temp;
+        for(int i=0; i<bytes.length; i++) {
+            temp = converter.convertByteToBits(bytes[i]);
+            for(int j=0; j<temp.length; j++) {
+                bits[i*8+j] = temp[j];
+            }
+        }
     }
     
     public void deconvertToPixel() {
-        
+        ByteConverter converter = new ByteConverter();
+        for(int i=0; i<bytes.length; i++) {
+            Bit[] temp = new Bit[8];
+            for(int j=0; j<temp.length; j++) {
+                temp[j] = bits[j + i*8];
+            }
+            bytes[i] = converter.convertBitsToByte(temp);
+        }
+    }
+    
+    public static void main(String[] args) {
+        Pixel pixel = new Pixel(24);
+        byte[] bytes = new byte[3];
+        bytes[0] = 100;
+        bytes[1] = 20;
+        bytes[2] = 50;
+        pixel.setBytes(bytes);
+        pixel.convertToBits();
+        Bit[] bits = pixel.getBits();
+        for(int i=0; i<bits.length; i++) {
+            System.out.print(bits[i].convertToInt());
+        }
+        System.out.println();
+        pixel.deconvertToPixel();
+        for(int i=0; i<pixel.getBytes().length; i++) {
+            System.out.print(pixel.getBytes()[i] + " ");
+        }
+        System.out.println();
     }
     
     public void printPixel() {

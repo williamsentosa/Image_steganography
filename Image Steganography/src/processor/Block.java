@@ -14,10 +14,12 @@ public class Block {
     private Pixel[][] pixels;
     private Bitplane[] bitplanes;
     private ByteConverter byteConverter;
+    private final int size = 8;
     
     // Konstruktor
     public Block() {
-        
+        pixels = new Pixel[size][size];
+        bitplanes = new Bitplane[0];
     }
     
     // Getter
@@ -31,20 +33,17 @@ public class Block {
     
     // Setter
     public void setPixels(Pixel[][] pixels) {
-        this.pixels = new Pixel[pixels.length][pixels[0].length];
-        for (int i = 0; i < pixels.length; i++) {
-            System.arraycopy(pixels[i], 0, this.pixels[i], 0, pixels[i].length);
-        }
+        this.pixels = pixels;
     }
     
     public void setBitplanes(Bitplane[] bitplanes) {
-        this.bitplanes = new Bitplane[bitplanes.length];
-        System.arraycopy(bitplanes, 0, this.bitplanes, 0, bitplanes.length);
+        this.bitplanes = bitplanes;
     }
     
     // Method
-    public Bitplane[] convertToBitplanes() {
-        Bitplane[] bitplaneResult = new Bitplane[8];
+    public void convertToBitplanes() {
+        int size = pixels[0][0].getSize();
+        Bitplane[] bitplaneResult = new Bitplane[size];
         for (int i = 0; i < bitplaneResult.length; i ++) {
             bitplaneResult[i] = new Bitplane();
         }
@@ -58,7 +57,6 @@ public class Block {
             }
         }
         
-        return bitplaneResult;
     }
     
     public byte[][] deconvertFromBitplanes(Bitplane[] bitplanes) {
