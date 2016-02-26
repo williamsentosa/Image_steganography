@@ -35,6 +35,8 @@ public class Bitplane {
     
     public void setBitsBasedOnPosition (int col, int row, Bit bit) {
         this.bits[col][row] = bit;
+    }
+    
     public int getSize() {
         return size;
     }
