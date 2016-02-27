@@ -358,31 +358,34 @@ public class Image {
         return res;
     }
     
-    public void checkImageQuality () {
-        
+    public double checkImageQuality (Pixel[][] pixOrigin, Pixel[][] pixStegano) {
+        double result;
+        result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
+        return result;
     }
     
     public static void main(String args[]) throws IOException {
-        String path = "grayscale.png";
+        String path = "Mushroom.png";
         Image img = new Image(path);
-        img.convertImageToBlocks();
+        //img.convertImageToBlocks();
         img.convertImageToPixels();
-        img.convertPixelsToBufferedImage();
+        //img.convertPixelsToBufferedImage();
         
         //img.convertPixelsToBlocks();
         //img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
-        //Image image = new 
+        /*
+        path = "newcoba.png";
+        Image image = new Image(path);
+        image.convertImageToPixels();
         //Pixel[][] pixel = img.convertImagesToPixels("newcoba.png");
-        //for (int i = 0; i < 80; i++) {
-            //System.out.print(pixels[i][0].getBytes()[1] + " ");
-        //    pixel[i][0].getBytes()[1] = (byte) 100;
-            //System.out.println(pixels[i][0].getBytes()[1]);
-        //}
+        for (int i = 0; i < 80; i++) {
+            image.getPixel()[i][0].getBytes()[1] = (byte) 100;
+        }
         
         
-       //System.out.println(img.countRMS(img.getPixel(), pixel));
-        
+       System.out.println(img.countRMS(img.getPixel(), image.getPixel()));
+        */
     }
     
 }
