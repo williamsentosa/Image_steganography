@@ -126,6 +126,7 @@ public class Image {
     //Untuk gambar bebas
     public Pixel[][] convertImagesToPixels(String path) {
         // Masukkin ke Pixels
+        Pixel[][] pixels = null;
         try {
             File imgPath = new File(path);
             BufferedImage bufferedImage;
@@ -135,7 +136,7 @@ public class Image {
             
             int cols = bufferedImage.getHeight();
             int rows = bufferedImage.getWidth();
-            Pixel[][] pixels = new Pixel[cols][rows];
+            pixels = new Pixel[cols][rows];
             
             System.out.println(dataByte.length);
             int idx = 0;
@@ -272,6 +273,12 @@ public class Image {
         return blocks;
     }
     
+    public Block[][] convertImageToBlocks() {
+        convertImageToPixels();
+        convertPixelsToBlock();
+        return convertPixelsToBlocks();
+    }
+    
     public BufferedImage convertPixelMatrixToBufferedImage(Pixel[][] pixels) {
         BufferedImage image = null;
         try {
@@ -341,7 +348,7 @@ public class Image {
         Image img = new Image(path);
         img.convertImageToPixels();
         img.convertPixelsToBufferedImage();
-        img.convertPixelsToBlocks();
+        //img.convertPixelsToBlocks();
         //img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
         
