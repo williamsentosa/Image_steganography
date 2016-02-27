@@ -358,8 +358,10 @@ public class Image {
         return res;
     }
     
-    public void checkImageQuality () {
-        
+    public double checkImageQuality (Pixel[][] pixOrigin, Pixel[][] pixStegano) {
+        double result;
+        result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
+        return result;
     }
     
     public static void main(String args[]) throws IOException {
