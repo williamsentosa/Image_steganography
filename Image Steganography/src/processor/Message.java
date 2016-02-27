@@ -116,9 +116,10 @@ public class Message {
         for (int i = 0; i < ((length / 63) * 8); i++) {
             bitplane[i] = new Bitplane();
             // Mengisi penanda konjugasi
-            bitplane[i].setBitsBasedOnPosition(0, 0, new Bit(true));
+            bitplane[i].setBitsBasedOnPosition(0, 1, new Bit(true));
             // Mengisi message
-            for (int j = 1; j < 8; j++) {
+            bitplane[i].setBitsBasedOnPosition(0, 0, bits[(i / 8)*63][i % 8]);
+            for (int j = 2; j < 8; j++) {
                 bitplane[i].setBitsBasedOnPosition(0, j, bits[(i / 8)*63 + j - 1][i % 8]);
             }
             for (int j = 1; j < 8; j++) {
@@ -132,9 +133,10 @@ public class Message {
             for (int i = ((length / 63) * 8); i < ((length / 63)*8 + 8); i++) {
                 bitplane[i] = new Bitplane();
                 // Mengisi penanda konjugasi
-                bitplane[i].setBitsBasedOnPosition(0, 0, new Bit(true));
+                bitplane[i].setBitsBasedOnPosition(0, 1, new Bit(true));
                 // Mengisi message
-                for (int j = 1; j < 8; j++) {
+                bitplane[i].setBitsBasedOnPosition(0, 0, bits[(i / 8)*63][i % 8]);
+                for (int j = 2; j < 8; j++) {
                     bitplane[i].setBitsBasedOnPosition(0, j, bits[(i / 8)*63 + j - 1][i % 8]);
                 }
                 for (int j = 1; j < ((length % 63 - 7) / 8 + 1); j++) {
@@ -165,7 +167,8 @@ public class Message {
         ByteConverter byteConverter = new ByteConverter();
         
         for (int i = 0; i < ((length / 63) * 8); i++) {
-            for (int j = 1; j < 8; j++) {
+            bits[(i / 8)*63][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, 0);
+            for (int j = 2; j < 8; j++) {
                 bits[(i / 8)*63 + j - 1][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, j);
             }
             for (int j = 1; j < 8; j++) {
@@ -177,7 +180,8 @@ public class Message {
         if ((length % 63) != 0) {
             // Ada bitplane yang memiliki elemen dummy
             for (int i = ((length / 63) * 8); i < ((length / 63)*8 + 8); i++) {
-                for (int j = 1; j < 8; j++) {
+                bits[(i / 8)*63][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, 0);
+                for (int j = 2; j < 8; j++) {
                     bits[(i / 8)*63 + j - 1][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, j);
                 }
                 for (int j = 1; j < ((length % 63 - 7) / 8 + 1); j++) {
@@ -224,7 +228,7 @@ public class Message {
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\teks.txt");
+        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\pdf.pdf");
         Message message2;
         
         message.encrypt("tes");
