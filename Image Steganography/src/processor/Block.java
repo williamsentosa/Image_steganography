@@ -5,6 +5,8 @@
  */
 package processor;
 
+import image.Image;
+
 /**
  *
  * @author Candy Olivia Mawalim
@@ -84,7 +86,10 @@ public class Block {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        String path = "grayscale.png";
+        Image image = new Image(path);
+        image.convertImageToPixels();
+        image.convertPixelsToBlocks();
         int size = 8;
         Block block = new Block();
         Pixel[][] pixels = new Pixel[size][size];
