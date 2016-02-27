@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,15 +31,18 @@ public class Message {
     
     public Message(String path) throws IOException {
         byte[] tempMessage;
+        int extensionIndex;
         String tempString;
         
         Path filePath = Paths.get(path);
         tempMessage = Files.readAllBytes(filePath);
+        // Menyisipkan extension file ke dalam message
         tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
-        if (filePath.toString().lastIndexOf(".") == -1) {
+        extensionIndex = filePath.toString().lastIndexOf(".");
+        if (extensionIndex == -1) {
             tempString += ".";
         } else {
-            tempString += filePath.toString().substring(filePath.toString().lastIndexOf("."));
+            tempString += filePath.toString().substring(extensionIndex);
         }
         message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
@@ -54,15 +58,18 @@ public class Message {
     // Setter
     public void setMessage(String path) throws IOException {
         byte[] tempMessage;
+        int extensionIndex;
         String tempString;
         
         Path filePath = Paths.get(path);
         tempMessage = Files.readAllBytes(filePath);
+        // Menyisipkan extension file ke dalam message
         tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
-        if (filePath.toString().lastIndexOf(".") == -1) {
+        extensionIndex = filePath.toString().lastIndexOf(".");
+        if (extensionIndex == -1) {
             tempString += ".";
         } else {
-            tempString += filePath.toString().substring(filePath.toString().lastIndexOf("."));
+            tempString += filePath.toString().substring(extensionIndex);
         }
         message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
@@ -138,17 +145,6 @@ public class Message {
             }
         }
         
-//        for (int i = 0; i < bitplane.length; i++) {
-//            System.out.println("Bitplane " + i);
-//            for (int j = 0; j < 8; j++) {
-//                for (int k = 0; k < 8; k++) {
-//                    System.out.print(bitplane[i].getBitsBasedOnPosition(j, k).convertToInt() + " ");
-//                }
-//                System.out.println();
-//            }
-//            System.out.println();
-//        }
-        
         return bitplane;
     }
     
@@ -194,22 +190,30 @@ public class Message {
         message = tempMessage.getBytes(StandardCharsets.ISO_8859_1);
     }
     
-    public void save(String fileName, String fileExtension) {
+    public void save(String fileName) throws FileNotFoundException, IOException {
+        byte[] tempMessage;
         FileOutputStream fos;
+        int extensionIndex;
         String path = "C:\\Users\\Windows7\\Desktop\\Kripto\\", tempString;
         
         tempString = new String(message, StandardCharsets.ISO_8859_1);
-        
+        extensionIndex = tempString.lastIndexOf(".");
+        tempMessage = tempString.substring(0, extensionIndex).getBytes(StandardCharsets.ISO_8859_1);
+        fos = new FileOutputStream(path + fileName + tempString.substring(extensionIndex));
+        fos.write(tempMessage);
+        fos.close();
     }
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\teks.txt");
+        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\doc.docx");
+        Message message2;
+        
         message.encrypt("tes");
-        message.decrypt("tes");
-        FileOutputStream fos = new FileOutputStream("C:\\Users\\Windows7\\Desktop\\Kripto\\newteks.txt");
-        fos.write(message.getMessage());
-        fos.close();
+        message2 = new Message(message.getLength());
+        message2.deconvertFromBitplane(message.convertToBitplane());
+        message2.decrypt("tes");
+        message2.save("message");
     }
     
 }
