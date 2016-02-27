@@ -30,8 +30,9 @@ public class ByteConverter {
         return result;
     }
     
-    public Bit[] convertByteToBits(byte b) {
+    public Bit[] convertByteToBits(byte bytee) {
         Bit[] bits = new Bit[8];
+        int b = (int) bytee; 
         
         for (int i = 0; i < bits.length; i++) {
             bits[i] = new Bit();
@@ -39,6 +40,7 @@ public class ByteConverter {
          
         if (b < 0) {
             b += 256;
+            System.out.println(b);
         }
            
         for (int i = 1; i <= 8; i++) {
@@ -64,9 +66,9 @@ public class ByteConverter {
     
     public static void main (String[] args) {
         ByteConverter bc = new ByteConverter();
-        System.out.println(bc.twoPower(0));
-        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("110")));
-        System.out.println(bc.convertBitsToByte(bc.convertByteToBits(Byte.parseByte("110"))));
+        //System.out.println(bc.twoPower(0));
+        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-1")));
+        //System.out.println(bc.convertBitsToByte(bc.convertByteToBits(Byte.parseByte("110"))));
         
     }
 }
