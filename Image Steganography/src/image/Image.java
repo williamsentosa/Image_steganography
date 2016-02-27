@@ -10,7 +10,9 @@ import javax.imageio.ImageIO;
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -72,240 +74,195 @@ public class Image {
     }
     
     // Method
-    public void convertImageToPixel() {
-        try {
-            File imagePath = new File(path);
-            BufferedImage image = ImageIO.read(imagePath);
-            
-            for (int i = 0; i < image.getHeight(); i++) {
-                for (int j = 0; j < image.getWidth(); j++) {
-                    int color = image.getRGB(i, j);
-                    //System.out.print(color + " ");
-                    int red = (color >> 16) & 0xFF;
-                    int green = (color >> 8) & 0xFF;
-                    int blue = color & 0xFF;
-                    System.out.print(red +"," + green + "," + blue + " ");
-                }
-                System.out.println();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+    private byte[] getBytesFromImage(BufferedImage bufferedImage) {
+        byte[] dataByte = null;
+        
+        pixelSize = bufferedImage.getColorModel().getPixelSize();
+        System.out.println(pixelSize);
+        WritableRaster raster = bufferedImage.getRaster();
+        DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
+        dataByte = data.getData();
+        /*
+        for (int i = 0; i < dataByte.length; i++) {
+            System.out.print(dataByte[i] + " ");
         }
+        System.out.println();
+        */
+        return dataByte;
     }
-    public void convertImageToBlock() {
-        // Masukkin ke bytes
+    
+    public void convertImageToPixels() {
+        // Masukkin ke Pixels
         try {
             File imgPath = new File(path);
-            BufferedImage bufferedImage = ImageIO.read(imgPath);
-            pixelSize = bufferedImage.getColorModel().getPixelSize();
+            BufferedImage bufferedImage;
+            bufferedImage = ImageIO.read(imgPath);
             
-            WritableRaster raster = bufferedImage .getRaster();
-            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-            byte[] dataByte = data.getData();
+            byte[] dataByte = getBytesFromImage(bufferedImage);
             
-            int rows = bufferedImage.getHeight();
-            int cols = bufferedImage.getWidth();
-            System.out.println(dataByte.length + " " + rows + " " + cols);
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
+            int cols = bufferedImage.getHeight();
+            int rows = bufferedImage.getWidth();
+            pixels = new Pixel[cols][rows];
+            
+            System.out.println(dataByte.length);
+            int idx = 0;
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < rows; j++) {
                     pixels[i][j] = new Pixel(pixelSize);
                     byte[] byteTemp = new byte[pixelSize/8];
                     for (int k = 0; k < pixelSize/8; k++) {
-                        byteTemp[k] = dataByte[j+i*cols];
+                        byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
+                        //System.out.println(idx + k+(j*(pixelSize/8))+(i*cols*pixelSize/8));
                     }
                     pixels[i][j].setBytes(byteTemp);
                 }
-            }
+            }  
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
 
-    public BufferedImage convertBytesToBufferedImage() {
-        BufferedImage bImageFromConvert = null;
-        try {
-            byte[] byteTemp = new byte[(bytes.length)*(bytes[0].length)];
-            for (int i = 0; i < bytes.length; i++) {
-                for (int j = 0; j < bytes[0].length; j++) {
-                    byteTemp[j + i * bytes[0].length] = bytes[i][j];
+    private byte[] convertPixelsToBytes() {
+        int cols = pixels.length;
+        int rows = pixels[0].length;
+        
+        byte[] resultByte = new byte[rows*cols*pixelSize/8];
+        
+        System.out.println(resultByte.length);
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                for (int k = 0; k < pixelSize/8; k++) {
+                    //System.out.println((k+j*(pixelSize/8)+i*cols*pixelSize/8) + " " + pixels[i][j].getBytes()[k]);
+                    resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
                 }
-            }
-            
-            for (int i = 0; i < byteTemp.length; i++) {
-                System.out.print(byteTemp[i] + " ");
-            }
-            
-            InputStream in = new ByteArrayInputStream(byteTemp);
-            
-            ImageIO.write(ImageIO.read(in),"png",new File("mush.png"));
-            bImageFromConvert = ImageIO.read(in);
-            
-            if (in == null) {
-                System.out.println("AAAAAA");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return bImageFromConvert;
-    }
-    
-    public Block[][] convertBytesToBlocks() {
-        int blockSize = 8;
-        int rows = 0;
-        int byteRows = bytes[0].length;
-        int byteCols = bytes.length;
-        
-        //defaultnya 0 jadi kalo dummy bytenya 0
-        if (byteRows % blockSize != 0) {
-            System.out.println(byteRows);
-            byteRows = byteRows - byteRows % blockSize + blockSize;
-            System.out.println(byteRows);
-        } 
-        
-        if (byteCols % blockSize != 0) {
-            byteCols = byteCols - byteCols % blockSize + blockSize;
-        } 
-        
-        //Inisialisasi tempBytes
-        byte[][] tempBytes = new byte[byteRows][byteCols];
-        for (int i = 0; i < bytes.length; i++) {
-            for (int j = 0; j < bytes[0].length; j++) {
-                tempBytes[i][j] = bytes[i][j];
-            }
-        }
-        
-        Block[][] blockResult = new Block[byteRows/blockSize][byteCols/blockSize];
-        for (int i = 0; i < byteRows/blockSize; i++) {
-            for (int j = 0; j < byteCols/blockSize; j++) {
-                blockResult[i][j] = new Block();
-                byte[][] byteToBlock = new byte[8][8];
-                for (int k = 0; k < blockSize; k++) {
-                    for (int l = 0; l < blockSize; l++) {
-                        byteToBlock[k][l] = tempBytes[k][l];
-                    }
-                }
-                ///blockResult[i][j].setBytes(byteToBlock);
-            }
-        }
-        
-        return blockResult;
-    }
-    
-    public void printSingleBlock(Block block) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                //System.out.print(block.getBytesBasedOnPosition(i, j) + " ");
-            }
-            System.out.println();
-        }
-    }
-    
-    public void printBlockMatrix(Block[][] blocks) {
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[0].length; j++) {
-                System.out.println((i+1)*(j+1));
-                printSingleBlock(blocks[i][j]);
-            }
-        }
-    }
-    
-    public void convertBlocksToBytes(Block[][] blocks) {
-        int rows = blocks.length * 8;
-        int cols = blocks[0].length * 8;
                 
-        byte[][] byteTemp = new byte[rows][cols];
-        
-        for (int i = 0; i < blocks.length; i++) {
-            for (int j = 0; j < blocks[0].length; j++) {
-                for (int k = 0; k < 8; k++) {
-                    //byteTemp[i][j*8+k] = blocks[i][j].getBytesBasedOnPosition(i,k);
-                }
             }
         }
+        /*
+        for (int i = 0; i < resultByte.length; i++) {
+            System.out.print(resultByte[i] + " ");
+        }
+        System.out.println();
         
+        System.out.println(rows + " " + cols);*/
+        return resultByte;
     }
     
-    //COBA-COBA
-    /** 
-     * Convert image with the set path into bytes
-     * @return bytes of image
-     */
-    public byte[] extractByte() {
-        ByteOutputStream bos = null;
+    public BufferedImage convertPixelsToBufferedImage() {
+        BufferedImage image = null;
         try {
-            File imgPath = new File(path);
-            BufferedImage bufferedImage = ImageIO.read(imgPath);
+            byte[] dataByte = convertPixelsToBytes();
+            int cols = pixels.length;
+            int rows = pixels[0].length;
             
-            try {
-                bos = new ByteOutputStream();
-                ImageIO.write(bufferedImage, "png", bos);
-            } catch (IOException ex) {
-                Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    bos.close();
-                } catch (Exception e) {
-                    
-                }
+            switch (pixelSize) {
+                case 8:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_BYTE_GRAY);
+                    break;
+                case 24:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_3BYTE_BGR);
+                    break;
+                case 32:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_4BYTE_ABGR);
+                    break;
             }
-            //byte[] byteArray = bos.getBytes();
-            System.out.println(bos);
-            //BufferedImage bI = ImageIO.read(new ByteArrayInputStream(byteArray));
-            //ImageIO.write(bI,"png",new File("mush.png"));
+            
+            image.setData(Raster.createRaster(image.getSampleModel(), new DataBufferByte(dataByte, dataByte.length), new Point()));
+            ImageIO.write(image,"png",new File("new1.png"));
+            
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return bos == null ? null : bos.getBytes();
+        return image;
     }
     
-    
-    
-    public void splitImage(BufferedImage img) throws IOException {
-        int chunksWidth = 8;
-        int chunksHeight = 8;
-        int rows = img.getWidth() / chunksHeight;
-        int cols = img.getHeight() / chunksWidth;
-        int chunks = rows * cols;
+    public Block convertPixelsToBlocks() {
+        int col = pixels.length;
+        int row = pixels[0].length;
         
-        int count = 0;
+        System.out.println(row + " " + col);
         
-        BufferedImage images[] = new BufferedImage[chunks];
-        for (int x = 0; x < rows; x++) {  
-            for (int y = 0; y < cols; y++) {  
-                //Initialize the image array with image chunks  
-                images[count] = new BufferedImage(chunksWidth, chunksHeight, img.getType());  
-  
-                // draws the image chunk  
-                Graphics2D gr = images[count++].createGraphics();  
-                gr.drawImage(img, 0, 0, chunksWidth, chunksHeight, chunksWidth * y, chunksHeight * x, chunksWidth * y + chunksWidth, chunksHeight * x + chunksHeight, null);  
-                gr.dispose();  
-            }  
-        }  
-        System.out.println("Splitting done" + images.length); 
+        if (row % 8 != 0) {
+            row = 8 + (row/8)*8;
+        } 
         
-        //Write mini images to image file
-       /*
-        for (int i = 0; i < images.length; i++) {  
-            ImageIO.write(images[i], "jpg", new File("img" + i + ".jpg"));  
-        }  
-        System.out.println("Mini images created");  */
-    }
-   
-    
-    public void printBytes() {
-        for (int i = 0; i < bytes.length; i++) {
-            for (int j = 0 ; j < bytes[i].length; j++) {
-                System.out.print(bytes[i][j] + " ");
+        if (col % 8 != 0) {
+            col = 8 + (col/8)*8;
+        } 
+        
+        System.out.println(row + " " + col);
+        Block block = new Block();
+        Pixel[][] blockPixel = new Pixel[col][row];
+        
+        for (int i = 0; i < col; i++) {
+            for (int j = 0; j < row; j++) {
+                //System.out.println(i + " " + j);
+                blockPixel[i][j] = new Pixel(pixelSize);
+                
+                for (int k = 0; k < pixelSize/8; k++) {
+                    blockPixel[i][j].getBytes()[k] = (byte)0;
+                }
             }
-            System.out.println();
         }
+        
+        for (int i = 0; i < pixels.length; i++) {
+            for (int j = 0; j < pixels[0].length; j++) {
+                //System.out.println(i + " " + j);
+                blockPixel[i][j] = pixels[i][j];
+            }
+        }
+        block.setPixels(blockPixel);
+        
+        return block;
+    }
+    
+    public BufferedImage convertPixelMatrixToBufferedImage(Pixel[][] pixels) {
+        BufferedImage image = null;
+        try {
+            int cols = pixels.length;
+            int rows = pixels[0].length;
+            
+            byte[] dataByte = new byte[rows*cols*pixelSize/8];
+        
+            System.out.println(dataByte.length);
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < rows; j++) {
+                    for (int k = 0; k < pixelSize/8; k++) {
+                        //System.out.println((k+j*(pixelSize/8)+i*cols*pixelSize/8) + " " + pixels[i][j].getBytes()[k]);
+                        dataByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
+                    }
+
+                }
+            }
+            
+            switch (pixelSize) {
+                case 8:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_BYTE_GRAY);
+                    break;
+                case 24:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_3BYTE_BGR);
+                    break;
+                case 32:  
+                    image = new BufferedImage(rows, cols, BufferedImage.TYPE_4BYTE_ABGR);
+                    break;
+            }
+            
+            image.setData(Raster.createRaster(image.getSampleModel(), new DataBufferByte(dataByte, dataByte.length), new Point()));
+            ImageIO.write(image,"png",new File("newcoba.png"));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return image;
     }
     
     public static void main(String args[]) throws IOException {
-        String path = "Mushroom.png";
+        String path = "grayscale.png";
         Image img = new Image(path);
-        img.convertImageToBlock();
+        img.convertImageToPixels();
+        img.convertPixelsToBufferedImage();
+        img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
         
         //img.getBytesFromImage();
