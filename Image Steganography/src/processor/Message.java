@@ -208,11 +208,11 @@ public class Message {
         message = tempMessage.getBytes(StandardCharsets.ISO_8859_1);
     }
     
-    public void save(String fileName) throws FileNotFoundException, IOException {
+    public void save(String path, String fileName) throws FileNotFoundException, IOException {
         byte[] tempMessage;
         FileOutputStream fos;
         int extensionIndex;
-        String path = "C:\\Users\\Windows7\\Desktop\\Kripto\\", tempString;
+        String tempString;
         
         tempString = new String(message, StandardCharsets.ISO_8859_1);
         extensionIndex = tempString.lastIndexOf(".");
@@ -224,14 +224,14 @@ public class Message {
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\pdf.pdf");
+        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\teks.txt");
         Message message2;
         
-//        message.encrypt("tes");
+        message.encrypt("tes");
         message2 = new Message(message.getLength());
         message2.deconvertFromBitplane(message.convertToBitplane());
-//        message2.decrypt("tes");
-        message2.save("message");
+        message2.decrypt("tes");
+        message2.save("C:\\Users\\Windows7\\Desktop\\Kripto\\", "message");
     }
     
 }
