@@ -1,7 +1,13 @@
 package processor;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,8 +29,18 @@ public class Message {
     }
     
     public Message(String path) throws IOException {
+        byte[] tempMessage;
+        String tempString;
+        
         Path filePath = Paths.get(path);
-        message = Files.readAllBytes(filePath);
+        tempMessage = Files.readAllBytes(filePath);
+        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
+        if (filePath.toString().lastIndexOf(".") == -1) {
+            tempString += ".";
+        } else {
+            tempString += filePath.toString().substring(filePath.toString().lastIndexOf("."));
+        }
+        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
         vigenereCipher = new VigenereCipher();
     }
@@ -37,14 +53,28 @@ public class Message {
     
     // Setter
     public void setMessage(String path) throws IOException {
+        byte[] tempMessage;
+        String tempString;
+        
         Path filePath = Paths.get(path);
-        message = Files.readAllBytes(filePath);
+        tempMessage = Files.readAllBytes(filePath);
+        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
+        if (filePath.toString().lastIndexOf(".") == -1) {
+            tempString += ".";
+        } else {
+            tempString += filePath.toString().substring(filePath.toString().lastIndexOf("."));
+        }
+        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
     }
     
     public void setLength(int length) {
         this.length = length;
         message = new byte[this.length];
+    }
+    
+    public void setVigenereCipher(VigenereCipher vigenereCipher) {
+        this.vigenereCipher = vigenereCipher;
     }
     
     // Getter
@@ -54,6 +84,10 @@ public class Message {
     
     public int getLength() {
         return length;
+    }
+    
+    public VigenereCipher getVigenereCipher() {
+        return vigenereCipher;
     }
     
     // Method
@@ -104,16 +138,16 @@ public class Message {
             }
         }
         
-        for (int i = 0; i < bitplane.length; i++) {
-            System.out.println("Bitplane " + i);
-            for (int j = 0; j < 8; j++) {
-                for (int k = 0; k < 8; k++) {
-                    System.out.print(bitplane[i].getBitsBasedOnPosition(j, k).convertToInt() + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
+//        for (int i = 0; i < bitplane.length; i++) {
+//            System.out.println("Bitplane " + i);
+//            for (int j = 0; j < 8; j++) {
+//                for (int k = 0; k < 8; k++) {
+//                    System.out.print(bitplane[i].getBitsBasedOnPosition(j, k).convertToInt() + " ");
+//                }
+//                System.out.println();
+//            }
+//            System.out.println();
+//        }
         
         return bitplane;
     }
@@ -160,16 +194,19 @@ public class Message {
         message = tempMessage.getBytes(StandardCharsets.ISO_8859_1);
     }
     
+    public void save(String fileName, String fileExtension) {
+        FileOutputStream fos;
+        String path = "C:\\Users\\Windows7\\Desktop\\Kripto\\", tempString;
+        
+        tempString = new String(message, StandardCharsets.ISO_8859_1);
+        
+    }
+    
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\teks.txt");
         message.encrypt("tes");
         message.decrypt("tes");
-//        File file = new File("C:\\Users\\Windows7\\Desktop\\Kripto\\doc.docx");
-//        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-//        MimeType mimeType = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(file));
-//        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-//        System.out.println(mimeType.toString());
         FileOutputStream fos = new FileOutputStream("C:\\Users\\Windows7\\Desktop\\Kripto\\newteks.txt");
         fos.write(message.getMessage());
         fos.close();
