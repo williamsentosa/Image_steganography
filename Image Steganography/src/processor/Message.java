@@ -108,36 +108,48 @@ public class Message {
             bits[i] = byteConverter.convertByteToBits(message[i]);
         }
         // Mengubah kumpulan bit menjadi kumpulan bitplane
-        if ((length % 64) == 0) {
-            bitplane = new Bitplane[(length / 64) * 8];
+        if ((length % 63) == 0) {
+            bitplane = new Bitplane[(length / 63) * 8];
         } else {
-            bitplane = new Bitplane[((length / 64) + 1) * 8];
+            bitplane = new Bitplane[((length / 63) + 1) * 8];
         }
-        for (int i = 0; i < ((length / 64) * 8); i++) {
+        for (int i = 0; i < ((length / 63) * 8); i++) {
             bitplane[i] = new Bitplane();
-            for (int j = 0; j < 8; j++) {
+            // Mengisi penanda konjugasi
+            bitplane[i].setBitsBasedOnPosition(0, 0, new Bit(true));
+            // Mengisi message
+            for (int j = 1; j < 8; j++) {
+                bitplane[i].setBitsBasedOnPosition(0, j, bits[(i / 8)*63 + j - 1][i % 8]);
+            }
+            for (int j = 1; j < 8; j++) {
                 for (int k = 0; k < 8; k++) {
-                    bitplane[i].setBitsBasedOnPosition(j, k, bits[(i / 8)*64 + j*8 +k][i % 8]);
+                    bitplane[i].setBitsBasedOnPosition(j, k, bits[(i / 8)*63 + j*8 - 1 + k][i % 8]);
                 }
             }
         }
-        if ((length % 64) != 0) {
+        if ((length % 63) != 0) {
             // Ada bitplane yang memiliki elemen dummy
-            for (int i = ((length / 64) * 8); i < ((length / 64)*8 + 8); i++) {
+            for (int i = ((length / 63) * 8); i < ((length / 63)*8 + 8); i++) {
                 bitplane[i] = new Bitplane();
-                for (int j = 0; j < ((length % 64) / 8); j++) {
+                // Mengisi penanda konjugasi
+                bitplane[i].setBitsBasedOnPosition(0, 0, new Bit(true));
+                // Mengisi message
+                for (int j = 1; j < 8; j++) {
+                    bitplane[i].setBitsBasedOnPosition(0, j, bits[(i / 8)*63 + j - 1][i % 8]);
+                }
+                for (int j = 1; j < ((length % 63 - 7) / 8 + 1); j++) {
                     for (int k = 0; k < 8; k++) {
-                        bitplane[i].setBitsBasedOnPosition(j, k, bits[(i / 8)*64 + j*8 +k][i % 8]);
+                        bitplane[i].setBitsBasedOnPosition(j, k, bits[(i / 8)*63 + j*8 - 1 + k][i % 8]);
                     }
                 }
-                for (int j = 0; j < ((length % 64) % 8); j++) {
-                    bitplane[i].setBitsBasedOnPosition((length % 64) / 8, j, bits[(i / 8)*64 + ((length % 64) / 8)*8 +j][i % 8]);
+                for (int j = 0; j < ((length % 63 - 7) % 8); j++) {
+                    bitplane[i].setBitsBasedOnPosition((length % 63 - 7) / 8 + 1, j, bits[(i / 8)*63 + ((length % 63) / 8)*8 - 1 + j][i % 8]);
                 }
                 // Mengisi elemen dummy
-                for (int j = ((length % 64) % 8); j < 8; j++) {
-                    bitplane[i].setBitsBasedOnPosition((length % 64) / 8, j, new Bit());
+                for (int j = ((length % 63 - 7) % 8); j < 8; j++) {
+                    bitplane[i].setBitsBasedOnPosition((length % 63 - 7) / 8 + 1, j, new Bit());
                 }
-                for (int j = ((length % 64) / 8 + 1); j < 8; j++) {
+                for (int j = ((length % 63 - 7) / 8 + 2); j < 8; j++) {
                     for (int k = 0; k < 8; k++) {
                         bitplane[i].setBitsBasedOnPosition(j, k, new Bit());
                     }
@@ -152,23 +164,29 @@ public class Message {
         Bit[][] bits = new Bit[length][8];
         ByteConverter byteConverter = new ByteConverter();
         
-        for (int i = 0; i < ((length / 64) * 8); i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < ((length / 63) * 8); i++) {
+            for (int j = 1; j < 8; j++) {
+                bits[(i / 8)*63 + j - 1][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, j);
+            }
+            for (int j = 1; j < 8; j++) {
                 for (int k = 0; k < 8; k++) {
-                    bits[(i / 8)*64 + j*8 +k][i % 8] = bitplanes[i].getBitsBasedOnPosition(j, k);
+                    bits[(i / 8)*63 + j*8 - 1 + k][i % 8] = bitplanes[i].getBitsBasedOnPosition(j, k);
                 }
             }
         }
-        if ((length % 64) != 0) {
+        if ((length % 63) != 0) {
             // Ada bitplane yang memiliki elemen dummy
-            for (int i = ((length / 64) * 8); i < ((length / 64)*8 + 8); i++) {
-                for (int j = 0; j < ((length % 64) / 8); j++) {
+            for (int i = ((length / 63) * 8); i < ((length / 63)*8 + 8); i++) {
+                for (int j = 1; j < 8; j++) {
+                    bits[(i / 8)*63 + j - 1][i % 8] = bitplanes[i].getBitsBasedOnPosition(0, j);
+                }
+                for (int j = 1; j < ((length % 63 - 7) / 8 + 1); j++) {
                     for (int k = 0; k < 8; k++) {
-                        bits[(i / 8)*64 + j*8 +k][i % 8] = bitplanes[i].getBitsBasedOnPosition(j, k);
+                        bits[(i / 8)*63 + j*8 - 1 + k][i % 8] = bitplanes[i].getBitsBasedOnPosition(j, k);
                     }
                 }
-                for (int j = 0; j < ((length % 64) % 8); j++) {
-                    bits[(i / 8)*64 + ((length % 64) / 8)*8 +j][i % 8] = bitplanes[i].getBitsBasedOnPosition((length % 64) / 8, j);
+                for (int j = 0; j < ((length % 63 - 7) % 8); j++) {
+                    bits[(i / 8)*63 + ((length % 63) / 8)*8 - 1 + j][i % 8] = bitplanes[i].getBitsBasedOnPosition((length % 63 - 7) / 8 + 1, j);
                 }
             }
         }
@@ -206,13 +224,13 @@ public class Message {
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\doc.docx");
+        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\pdf.pdf");
         Message message2;
         
-        message.encrypt("tes");
+//        message.encrypt("tes");
         message2 = new Message(message.getLength());
         message2.deconvertFromBitplane(message.convertToBitplane());
-        message2.decrypt("tes");
+//        message2.decrypt("tes");
         message2.save("message");
     }
     
