@@ -37,6 +37,7 @@ public class ConjugationTable {
         for (int i = 0; i < bitplanes.length; i++) {
             bitplanes[i] = new Bitplane();
         }
+        initiateTable();
         index = 0;
         x = 0;
         y = 0;
@@ -54,6 +55,7 @@ public class ConjugationTable {
         for (int i = 0; i < bitplanes.length; i++) {
             bitplanes[i] = new Bitplane();
         }
+        initiateTable();
     }
     
     // Getter
@@ -113,10 +115,20 @@ public class ConjugationTable {
         return bits;
     }
     
+    private void initiateTable() {
+        for (int i = 0; i < bitplanes.length; i++) {
+            for (int j = 0; j < 8; j++) {
+                for (int k = 0; k < 8; k++) {
+                    bitplanes[i].setBitsBasedOnPosition(j, k, new Bit());
+                }
+            }
+        }
+    }
+    
     public static void main(String[] args) {
         // TODO code application logic here
         Bit[] bits;
-        int countBitplane, msgSize = 1000;
+        int countBitplane, msgSize = 550;
         ConjugationTable table = new ConjugationTable(msgSize);
         
         if((msgSize % 64) == 0) {
@@ -130,14 +142,16 @@ public class ConjugationTable {
         System.out.println("Count Bitplane " + countBitplane);
         System.out.println("Count Table " + table.getSize());
         bits = table.getConjugationArray(msgSize);
-//        for (int i = 0; i < bits.length; i++) {
-//            System.out.print(bits[i].convertToInt() + " ");
-//        }
+        System.out.println("Conjugation Array");
+        for (int i = 0; i < bits.length; i++) {
+            System.out.print(bits[i].convertToInt() + " ");
+        }
+        System.out.println("\n");
         for (int i = 0; i < table.getSize(); i++) {
             System.out.println("Conjugation Table " + i);
             for (int j = 0; j < 8; j++) {
                 for (int k = 0; k < 8; k++) {
-                    System.out.print(table.getBitplanes()[i].getBitsBasedOnPosition(j, k) + " ");
+                    System.out.print(table.getBitplanes()[i].getBitsBasedOnPosition(j, k).convertToInt() + " ");
                 }
                 System.out.println();
             }
