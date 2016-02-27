@@ -40,7 +40,6 @@ public class ByteConverter {
          
         if (b < 0) {
             b += 256;
-            System.out.println(b);
         }
            
         for (int i = 1; i <= 8; i++) {
@@ -64,10 +63,53 @@ public class ByteConverter {
         System.out.println();
     }
     
+    public Bit[][] convertIntegerToBitplane(int number) {
+        //asumsi number tidak lebih dari 2 pangkat 20
+        Bit[][] bitplane = new Bit[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                bitplane[i][j] = new Bit();
+                bitplane[i][j].setValue(false);
+            }
+        }
+        
+        Bit[] bit = new Bit[64];
+        for (int i = 0; i < bit.length; i++) {
+            bit[i] = new Bit();
+            bit[i].setValue(false);
+        }
+        
+        for (int i = 30; i >= 0; i--) {
+            if (number >= twoPower(i)) {
+                number -= twoPower(i);
+                bit[i].setValue(true);
+
+            }
+        }
+        
+        int counter = 63;
+        
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                bitplane[i][j] = bit[counter];
+                counter--;
+            }
+        }
+        
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(bitplane[i][j].getValue() + " ");
+            }
+            System.out.println();
+        }
+        
+        return bitplane;
+    }
     public static void main (String[] args) {
         ByteConverter bc = new ByteConverter();
         //System.out.println(bc.twoPower(0));
-        bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-1")));
+        //bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-1")));
+        bc.convertIntegerToBitplane(1999999999);
         //System.out.println(bc.convertBitsToByte(bc.convertByteToBits(Byte.parseByte("110"))));
         
     }
