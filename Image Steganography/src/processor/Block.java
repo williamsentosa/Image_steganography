@@ -5,6 +5,8 @@
  */
 package processor;
 
+import image.Image;
+
 /**
  *
  * @author Candy Olivia Mawalim
@@ -42,51 +44,74 @@ public class Block {
     
     // Method
     public void convertToBitplanes() {
-        int size = pixels[0][0].getSize();
-        Bitplane[] bitplaneResult = new Bitplane[size];
-        for (int i = 0; i < bitplaneResult.length; i ++) {
-            bitplaneResult[i] = new Bitplane();
-        }
-        for (int i = 0; i < pixels.length; i++) {
-            for (int j = 0; j < pixels[i].length; j++) {
-                Bit[] tempBit = new Bit[8];
-                //tempBit = byteConverter.convertByteToBits(pixels[i][j]);
-                for (int k = 0; k < bitplaneResult.length; k++) {
-                    bitplaneResult[k].setBitsBasedOnPosition(i, j, tempBit[k]);
-                }
+        int pixelSize = pixels[0][0].getSize();
+        Bitplane[] bitplaneResult = new Bitplane[pixelSize];
+        Bit[][][] bitsTemp = new Bit[this.size][this.size][size];
+        for (int i = 0; i < pixels.length; i ++) {
+            for(int j = 0; j < pixels[i].length; j++) {
+                pixels[i][j].convertToBits();
+                pixels[i][j].printPixel();
+                Bit[] bits = pixels[i][j].getBits();
+                bitsTemp[i][j] = pixels[i][j].getBits();
             }
         }
+        for(int k=0; k < pixelSize; k++) {
+            Bit[][] bitTemp = new Bit[this.size][this.size];
+            for(int i=0; i < bitsTemp.length; i++) {
+                for(int j=0; j<bitsTemp[i].length; j++) {
+                    bitTemp[i][j] = bitsTemp[i][j][k];
+                }
+            }
+            bitplaneResult[k] = new Bitplane();
+            bitplaneResult[k].setBits(bitTemp);
+        }
         
+        this.bitplanes = bitplaneResult;
     }
     
-    public byte[][] deconvertFromBitplanes(Bitplane[] bitplanes) {
-        int row = bitplanes[0].getBitRow();
-        int col = bitplanes[0].getBitColumn();
-        byte[][] bytesResult = new byte[row][col];
-        Bit[] bitTemp = new Bit[8];
-        
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                for (int k = 0; k < 8; k++) {
-                    bitTemp[k] = bitplanes[k].getBitsBasedOnPosition(i, j);
+    public void deconvertFromBitplanes() {
+        int pixelSize = bitplanes.length;
+        Bit[][][] bitsTemp = new Bit[this.size][this.size][pixelSize];
+        for(int k=0; k < pixelSize; k++) {
+            Bit[][] bitTemp = this.bitplanes[k].getBits();
+            for(int i=0; i < bitsTemp.length; i++) {
+                for(int j=0; j<bitsTemp[i].length; j++) {
+                    bitsTemp[i][j][k] = bitTemp[i][j];
                 }
-                bytesResult[i][j] = byteConverter.convertBitsToByte(bitTemp);
             }
         }
-        
-        return bytesResult;
+        for (int i = 0; i < bitsTemp.length; i ++) {
+            for(int j = 0; j < bitsTemp[i].length; j++) {
+                pixels[i][j].setBits(bitsTemp[i][j]);
+                pixels[i][j].deconvertToPixel();
+            }
+        }
     }
+    
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        
-        Block block = new Block();
-        Bit[] bits = new Bit[8];
-        
-        
+        String path = "mushroom.png";
+        Image image = new Image(path);
+        Block[][] blocks = image.convertImageToBlocks();
+        System.out.println(blocks.length);
+        System.out.println(blocks[0].length);
+        blocks[0][0].convertToBitplanes();
+        Bitplane[] bitplanes = blocks[0][0].getBitplanes();
+        for(int i=0; i<bitplanes.length; i++) {
+            for(int j=0; j<bitplanes[i].getBits().length; j++) {
+                for(int k=0; k<bitplanes[i].getBits()[j].length; k++) {
+                    Bit bit = bitplanes[i].getBits()[j][k];
+                    System.out.print(bit.convertToInt());
+                }
+                System.out.println();
+            }
+            System.out.println("************************************************");
+        }
+        blocks[0][0].deconvertFromBitplanes();
+        blocks[0][0].getPixels()[0][0].printPixel();
         
     }
     

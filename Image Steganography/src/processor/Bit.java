@@ -42,6 +42,7 @@ public class Bit {
         return value == b.getValue();
     }
     
+    
     public static void main(String[] args) {
         Bit b = new Bit();
         b.setValue(true);
