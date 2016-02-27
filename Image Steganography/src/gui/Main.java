@@ -79,7 +79,9 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                Main main = new Main();
+                main.setContentPane(new MainPanel());
+                main.setVisible(true);
             }
         });
     }
