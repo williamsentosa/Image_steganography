@@ -254,8 +254,8 @@ public class Image {
     
     public Block[][] convertPixelsToBlocks() {
         Block bigBlock = convertPixelsToBlock();
-        int row = bigBlock.getPixels()[0].length/8;
-        int col = bigBlock.getPixels().length/8;
+        int col = bigBlock.getPixels()[0].length/8;
+        int row = bigBlock.getPixels().length/8;
         Block[][] blocks = new Block[row][col];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {

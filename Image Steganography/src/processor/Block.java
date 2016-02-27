@@ -44,15 +44,22 @@ public class Block {
     
     // Method
     public void convertToBitplanes() {
-        int size = pixels[0][0].getSize();
-        Bitplane[] bitplaneResult = new Bitplane[size];
+        int pixelSize = pixels[0][0].getSize();
+        Bitplane[] bitplaneResult = new Bitplane[pixelSize];
         Bit[][][] bitsTemp = new Bit[this.size][this.size][size];
         for (int i = 0; i < pixels.length; i ++) {
-            for(int j=0; j < pixels[i].length; j++) {
+            for(int j = 0; j < pixels[i].length; j++) {
+                pixels[i][j].convertToBits();
+                pixels[i][j].printPixel();
+                Bit[] bits = pixels[i][j].getBits();
+                for(int a=0; a<bits.length; a++) {
+                    System.out.print(bits[a].convertToInt());
+                }
+                System.out.println();
                 bitsTemp[i][j] = pixels[i][j].getBits();
             }
         }
-        for(int k=0; k < size; k++) {
+        for(int k=0; k < pixelSize; k++) {
             Bit[][] bitTemp = new Bit[this.size][this.size];
             for(int i=0; i < bitsTemp.length; i++) {
                 for(int j=0; j<bitsTemp[i].length; j++) {
@@ -62,6 +69,8 @@ public class Block {
             bitplaneResult[k] = new Bitplane();
             bitplaneResult[k].setBits(bitTemp);
         }
+        
+        this.bitplanes = bitplaneResult;
     }
     
     public void deconvertFromBitplanes() {
@@ -87,20 +96,22 @@ public class Block {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String path = "grayscale.png";
+        String path = "mushroom.png";
         Image image = new Image(path);
-        image.convertImageToPixels();
-        Block[][] blocks = image.convertPixelsToBlocks();
+        Block[][] blocks = image.convertImageToBlocks();
+        System.out.println(blocks.length);
+        System.out.println(blocks[0].length);
         blocks[0][0].convertToBitplanes();
         Bitplane[] bitplanes = blocks[0][0].getBitplanes();
         for(int i=0; i<bitplanes.length; i++) {
-            for(int j=0; j<bitplanes[i].getSize(); j++) {
-                for(int k=0; j<bitplanes[i].getSize(); k++) {
-                    System.out.print(bitplanes[i].getBits()[j][k].convertToInt());
+            for(int j=0; j<bitplanes[i].getBits().length; j++) {
+                for(int k=0; k<bitplanes[i].getBits()[j].length; k++) {
+                    Bit bit = bitplanes[i].getBits()[j][k];
+                    System.out.print(bit.convertToInt());
                 }
                 System.out.println();
             }
-            System.out.println("************************************************s");
+            System.out.println("************************************************");
         }
         
     }
