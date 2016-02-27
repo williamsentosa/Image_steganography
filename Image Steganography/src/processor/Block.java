@@ -22,6 +22,11 @@ public class Block {
     public Block() {
         pixels = new Pixel[size][size];
         bitplanes = new Bitplane[0];
+        for(int i=0; i<8; i++) {
+            for(int j=0; j<8; j++) {
+                pixels[i][j] = new Pixel();
+            }
+        }
     }
     
     // Getter
@@ -92,13 +97,13 @@ public class Block {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String path = "mushroom.png";
+        String path = "flower.png";
         Image image = new Image(path);
         Block[][] blocks = image.convertImageToBlocks();
-        System.out.println(blocks.length);
-        System.out.println(blocks[0].length);
-        blocks[0][0].convertToBitplanes();
-        Bitplane[] bitplanes = blocks[0][0].getBitplanes();
+        blocks[20][5].getPixels()[0][0].printPixel();
+        
+        blocks[20][5].convertToBitplanes();
+        Bitplane[] bitplanes = blocks[20][5].getBitplanes();
         for(int i=0; i<bitplanes.length; i++) {
             for(int j=0; j<bitplanes[i].getBits().length; j++) {
                 for(int k=0; k<bitplanes[i].getBits()[j].length; k++) {
@@ -109,8 +114,8 @@ public class Block {
             }
             System.out.println("************************************************");
         }
-        blocks[0][0].deconvertFromBitplanes();
-        blocks[0][0].getPixels()[0][0].printPixel();
+        blocks[20][5].deconvertFromBitplanes();
+        blocks[20][5].getPixels()[0][0].printPixel();
         
     }
     

@@ -29,6 +29,13 @@ public class Message {
         vigenereCipher = new VigenereCipher();
     }
     
+    public void printMessage() {
+        for(int i=0; i<length; i++) {
+            System.out.print(message[i] + " ");
+        }
+        System.out.println();
+    }
+    
     public Message(String path) throws IOException {
         byte[] tempMessage;
         int extensionIndex;
@@ -220,7 +227,9 @@ public class Message {
         
         tempString = new String(message, StandardCharsets.ISO_8859_1);
         extensionIndex = tempString.lastIndexOf(".");
+        System.out.println(path + fileName + tempString.substring(extensionIndex));
         tempMessage = tempString.substring(0, extensionIndex).getBytes(StandardCharsets.ISO_8859_1);
+        
         fos = new FileOutputStream(path + fileName + tempString.substring(extensionIndex));
         fos.write(tempMessage);
         fos.close();
@@ -228,14 +237,14 @@ public class Message {
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        Message message = new Message("C:\\Users\\Windows7\\Desktop\\Kripto\\pdf.pdf");
+        Message message = new Message("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\pesan.docx");
         Message message2;
         
         message.encrypt("tes");
         message2 = new Message(message.getLength());
         message2.deconvertFromBitplane(message.convertToBitplane());
         message2.decrypt("tes");
-        message2.save("C:\\Users\\Windows7\\Desktop\\Kripto\\", "message");
+        message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "message");
     }
     
 }
