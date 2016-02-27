@@ -104,7 +104,7 @@ public class Image {
             int rows = bufferedImage.getWidth();
             pixels = new Pixel[cols][rows];
             
-            System.out.println(dataByte.length);
+            //System.out.println(dataByte.length);
             int idx = 0;
             for (int i = 0; i < cols; i++) {
                 for (int j = 0; j < rows; j++) {
@@ -211,11 +211,11 @@ public class Image {
         return image;
     }
     
-    public Block convertPixelsToBlocks() {
+    private Block convertPixelsToBlock() {
         int col = pixels.length;
         int row = pixels[0].length;
         
-        System.out.println(row + " " + col);
+        //System.out.println(row + " " + col);
         
         if (row % 8 != 0) {
             row = 8 + (row/8)*8;
@@ -225,7 +225,7 @@ public class Image {
             col = 8 + (col/8)*8;
         } 
         
-        System.out.println(row + " " + col);
+        //System.out.println(row + " " + col);
         Block block = new Block();
         Pixel[][] blockPixel = new Pixel[col][row];
         
@@ -251,6 +251,27 @@ public class Image {
         return block;
     }
     
+    public Block[][] convertPixelsToBlocks() {
+        Block bigBlock = convertPixelsToBlock();
+        int row = bigBlock.getPixels()[0].length/8;
+        int col = bigBlock.getPixels().length/8;
+        Block[][] blocks = new Block[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                blocks[i][j] = new Block();
+                for (int l = 0; l < 8; l++) {
+                    for (int k = 0; k < 8; k++) {
+                        blocks[i][j].getPixels()[l][k] = bigBlock.getPixels()[l+i*8][k+j*8];
+                        //System.out.println("blok : " + i + "," + j + " pixel ke : " + l + "," + k + " bigblock pixel ke : " + (l+i*8) + "," + (k+j*8));
+                    }
+                }
+                
+            }
+        }
+        
+        return blocks;
+    }
+    
     public BufferedImage convertPixelMatrixToBufferedImage(Pixel[][] pixels) {
         BufferedImage image = null;
         try {
@@ -259,7 +280,7 @@ public class Image {
             
             byte[] dataByte = new byte[rows*cols*pixelSize/8];
         
-            System.out.println(dataByte.length);
+            //System.out.println(dataByte.length);
             for (int i = 0; i < cols; i++) {
                 for (int j = 0; j < rows; j++) {
                     for (int k = 0; k < pixelSize/8; k++) {
@@ -301,6 +322,8 @@ public class Image {
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < pixOrigin[0][0].getSize()/8; k++) {
+                    System.out.println(pixOrigin[i][j].getBytes()[k] + " " + pixStegano[i][j].getBytes()[k]);
+                    
                     sum += Math.pow((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]),2);
                 }
             }
@@ -318,15 +341,19 @@ public class Image {
         Image img = new Image(path);
         img.convertImageToPixels();
         img.convertPixelsToBufferedImage();
-        img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
+        img.convertPixelsToBlocks();
+        //img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
         
-        Pixel[][] pixels = img.convertImagesToPixels("newcoba.png");
+        Pixel[][] pixel = img.convertImagesToPixels("newcoba.png");
         for (int i = 0; i < 80; i++) {
-            pixels[i][0].getBytes()[1] = (byte) 100;
+            //System.out.print(pixels[i][0].getBytes()[1] + " ");
+            pixel[i][0].getBytes()[1] = (byte) 100;
+            //System.out.println(pixels[i][0].getBytes()[1]);
         }
         
-        System.out.println(img.countRMS(img.getPixel(), pixels));
+        
+       System.out.println(img.countRMS(img.getPixel(), pixel));
         
     }
     
