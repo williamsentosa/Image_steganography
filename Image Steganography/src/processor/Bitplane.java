@@ -111,7 +111,7 @@ public class Bitplane {
     }
     
     public boolean isConjugated() {
-        return !bits[0][0].getValue();
+        return !bits[0][1].getValue();
     }
     
     public void conjugate() {

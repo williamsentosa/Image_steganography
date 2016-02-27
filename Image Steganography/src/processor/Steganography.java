@@ -49,7 +49,7 @@ public class Steganography {
         Bitplane messagesLengthInfo = new Bitplane();
         System.out.println("Message length : " + message.getLength());
         int n = 0;
-        double threshold = 0.3;
+        double threshold = 0.5;
         
         for(int j=0; j<listBitplanes.size(); j++) {
             for(int i=0; i<listBitplanes.get(j).length; i++) {
@@ -70,15 +70,36 @@ public class Steganography {
         
         ByteConverter converter = new ByteConverter();
         Bitplane msgLengthInfo = new Bitplane();
+        System.out.println("Length : " + message.getLength());
         msgLengthInfo.setBits(converter.convertIntegerToBitplane(message.getLength()));
-        
+        boolean found = false;
         for(int i = listBitplanes.size()-1; i >= 0; i--) {
             for(int j=listBitplanes.get(i).length - 1; j >= 0; j--) {        
                 if(listBitplanes.get(i)[j].isNoisy(threshold)) {
+                    if(!msgLengthInfo.isNoisy(threshold)) {
+                        msgLengthInfo.conjugate();
+                    }
+                    System.out.println("i : " + i + " j : " + j);
                     listBitplanes.get(i)[j] = msgLengthInfo;
+                    System.out.println("**** Mesage Info ****");
+                    for(int a = 0; a<listBitplanes.get(i)[j].getBits().length; a++) {
+                        for(int b=0; b<listBitplanes.get(i)[j].getBits()[a].length; b++) {
+                            System.out.print(msgLengthInfo.getBits()[a][b].convertToInt());
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("**** Bitplane info ****");
+                    for(int a = 0; a<listBitplanes.get(i)[j].getBits().length; a++) {
+                        for(int b=0; b<listBitplanes.get(i)[j].getBits()[a].length; b++) {
+                            System.out.print(listBitplanes.get(i)[j].getBits()[a][b].convertToInt());
+                        }
+                        System.out.println();
+                    }
+                    found = true;
                     break;
                 }
             }
+            if(found) break;
         }
         
         for(int j=0; j<listBitplanes.size(); j++) {
@@ -100,7 +121,6 @@ public class Steganography {
     }
     
     public Message extractInformation(String key) {
-        Message message = new Message();
         ArrayList<Bitplane[]> listBitplanes = new ArrayList<>();
         Block[][] blocks = image.convertImageToBlocks();
         for(int i=0; i<blocks.length; i++) {
@@ -109,22 +129,50 @@ public class Steganography {
                 listBitplanes.add(blocks[i][j].getBitplanes());
             }
         }
-        double threshold = 0.3;
+        boolean found = false;
+        double threshold = 0.5;
         int messagesLength = 0;
         ByteConverter converter = new ByteConverter();
         for(int i = listBitplanes.size()-1; i >= 0; i--) {
             for(int j=listBitplanes.get(i).length - 1; j >= 0; j--) {        
                 if(listBitplanes.get(i)[j].isNoisy(threshold)) {
+                    System.out.println("i : " + i + " j : " + j);
                     if(listBitplanes.get(i)[j].isConjugated()) {
+                        System.out.println("**** Before ***");
+                        for(int a = 0; a<listBitplanes.get(i)[j].getBits().length; a++) {
+                            for(int b=0; b<listBitplanes.get(i)[j].getBits()[a].length; b++) {
+                                System.out.print(listBitplanes.get(i)[j].getBits()[a][b].convertToInt());
+                            }
+                            System.out.println();
+                        }
                         listBitplanes.get(i)[j].conjugate();
+                        System.out.println("**** After ***");
+                        for(int a = 0; a<listBitplanes.get(i)[j].getBits().length; a++) {
+                            for(int b=0; b<listBitplanes.get(i)[j].getBits()[a].length; b++) {
+                                System.out.print(listBitplanes.get(i)[j].getBits()[a][b].convertToInt());
+                            }
+                            System.out.println();
+                        }
                         messagesLength = converter.convertBitplaneToInteger(listBitplanes.get(i)[j].getBits());
+                        System.out.println("Conjugated");
                     } else {
+                        for(int a = 0; a<listBitplanes.get(i)[j].getBits().length; a++) {
+                            for(int b=0; b<listBitplanes.get(i)[j].getBits()[a].length; b++) {
+                                System.out.print(listBitplanes.get(i)[j].getBits()[a][b].convertToInt());
+                            }
+                            System.out.println();
+                        }
                         messagesLength = converter.convertBitplaneToInteger(listBitplanes.get(i)[j].getBits());
+                        System.out.println(" not Conjugated");
                     }
+                    found = true;
                     break;
                 }
             }
+            if(found) break;
         }
+        System.out.println(messagesLength);
+        Message message = new Message(messagesLength);
         int n = 0;
         Bitplane[] messages = new Bitplane[(messagesLength)/8 + 1];
         for(int j=0; j<listBitplanes.size(); j++) {
@@ -132,7 +180,7 @@ public class Steganography {
                 listBitplanes.get(j)[i].convertToCGC();    
                 if(listBitplanes.get(j)[i].isNoisy(threshold)) {
                     if(listBitplanes.get(j)[i].isConjugated()) {
-                        listBitplanes.get(j)[i] = messages[n];
+                        messages[n] = listBitplanes.get(j)[i];
                         messages[n].conjugate();
                     } else {
                         messages[n] = listBitplanes.get(j)[i];
@@ -141,27 +189,30 @@ public class Steganography {
                 }
             }
         }
-        message.setLength(messagesLength);
         message.deconvertFromBitplane(messages);
         return message;
     }
     
     public static void main (String[] args) {
-//        Image image = new Image("flower.png");
-//        Steganography stegano = new Steganography(image);
-//        Message message;
-//        try {
-//            message = new Message("pesan3.pdf");
-//            stegano.hideInformation(message, "haha");
-//        } catch (IOException ex) {
-//            Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
-        Image image = new Image("new1.png");
+        Image image = new Image("flower.png");
         Steganography stegano = new Steganography(image);
         Message message;
-        message = stegano.extractInformation(null);
+        try {
+            message = new Message("pesan.docx");
+            System.out.println(message.getLength());
+            stegano.hideInformation(message, "haha");
+        } catch (IOException ex) {
+            Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+        image = new Image("new1.png");
+        stegano = new Steganography(image);
+        message = stegano.extractInformation(null);
+        try {
+            message.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography", "message");
+        } catch (IOException ex) {
+            Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     

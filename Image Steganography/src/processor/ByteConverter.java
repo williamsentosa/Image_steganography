@@ -97,12 +97,12 @@ public class ByteConverter {
         }
         bitplane[0][0].setValue(true); //inisialisasi untuk menentukan panjang messagenya
         
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                System.out.print(bitplane[i][j].getValue() + " ");
-//            }
-//            System.out.println();
-//        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(bitplane[i][j].getValue() + " ");
+            }
+            System.out.println();
+        }
         
         return bitplane;
     }
