@@ -254,8 +254,8 @@ public class Image {
     
     public Block[][] convertPixelsToBlocks() {
         Block bigBlock = convertPixelsToBlock();
-        int row = bigBlock.getPixels()[0].length/8;
-        int col = bigBlock.getPixels().length/8;
+        int col = bigBlock.getPixels()[0].length/8;
+        int row = bigBlock.getPixels().length/8;
         Block[][] blocks = new Block[row][col];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
@@ -277,6 +277,25 @@ public class Image {
         convertImageToPixels();
         convertPixelsToBlock();
         return convertPixelsToBlocks();
+    }
+    
+    public Pixel[][] convertBlocksToPixels(Block[][] blocks){
+        int row = blocks.length;
+        int col = blocks[0].length;
+        Pixel[][] bigPixels = new Pixel[row*8][col*8];
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                bigPixels[i][j] = new Pixel();
+                for(int k = 0; k < 8; k++) {
+                    for (int l = 0; l < 8; l++) {
+                        bigPixels[l+i*8][k+j*8] = blocks[i][j].getPixels()[l][k];
+                    }
+                } 
+            }
+        }
+        
+        return bigPixels;
     }
     
     public BufferedImage convertPixelMatrixToBufferedImage(Pixel[][] pixels) {
@@ -344,23 +363,25 @@ public class Image {
     }
     
     public static void main(String args[]) throws IOException {
-        String path = "mushroom.png";
+        String path = "grayscale.png";
         Image img = new Image(path);
+        img.convertImageToBlocks();
         img.convertImageToPixels();
         img.convertPixelsToBufferedImage();
+        
         //img.convertPixelsToBlocks();
         //img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
-        
-        Pixel[][] pixel = img.convertImagesToPixels("newcoba.png");
-        for (int i = 0; i < 80; i++) {
+        //Image image = new 
+        //Pixel[][] pixel = img.convertImagesToPixels("newcoba.png");
+        //for (int i = 0; i < 80; i++) {
             //System.out.print(pixels[i][0].getBytes()[1] + " ");
-            pixel[i][0].getBytes()[1] = (byte) 100;
+        //    pixel[i][0].getBytes()[1] = (byte) 100;
             //System.out.println(pixels[i][0].getBytes()[1]);
-        }
+        //}
         
         
-       System.out.println(img.countRMS(img.getPixel(), pixel));
+       //System.out.println(img.countRMS(img.getPixel(), pixel));
         
     }
     
