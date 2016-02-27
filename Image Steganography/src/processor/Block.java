@@ -82,6 +82,7 @@ public class Block {
         }
     }
     
+    
     /**
      * @param args the command line arguments
      */
@@ -89,11 +90,18 @@ public class Block {
         String path = "grayscale.png";
         Image image = new Image(path);
         image.convertImageToPixels();
-        image.convertPixelsToBlocks();
-        int size = 8;
-        Block block = new Block();
-        Pixel[][] pixels = new Pixel[size][size];
-        
+        Block[][] blocks = image.convertPixelsToBlocks();
+        blocks[0][0].convertToBitplanes();
+        Bitplane[] bitplanes = blocks[0][0].getBitplanes();
+        for(int i=0; i<bitplanes.length; i++) {
+            for(int j=0; j<bitplanes[i].getSize(); j++) {
+                for(int k=0; j<bitplanes[i].getSize(); k++) {
+                    System.out.print(bitplanes[i].getBits()[j][k].convertToInt());
+                }
+                System.out.println();
+            }
+            System.out.println("************************************************s");
+        }
         
     }
     
