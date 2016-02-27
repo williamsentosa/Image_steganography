@@ -95,21 +95,45 @@ public class ByteConverter {
                 counter--;
             }
         }
+        bitplane[0][0].setValue(true); //inisialisasi untuk menentukan panjang messagenya
         
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                System.out.print(bitplane[i][j].getValue() + " ");
-            }
-            System.out.println();
-        }
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                System.out.print(bitplane[i][j].getValue() + " ");
+//            }
+//            System.out.println();
+//        }
         
         return bitplane;
     }
+    
+    public int convertBitplaneToInteger(Bit[][] bitplane){
+        int result = 0;
+        Bit[] bitTemp = new Bit[64];
+        for (int i = 0; i < bitplane.length; i++) {
+            for (int j = 0; j < bitplane[0].length; j++) {
+                bitTemp[i*8+j] = new Bit();
+                bitTemp[i*8+j].setValue(bitplane[i][j].getValue());
+            }
+        }
+        bitTemp[0].setValue(false); // balikan inisialisasi untuk panjang pesan
+        
+        for (int i = 30; i >= 0; i--) {
+            if (bitTemp[63-i].getValue()) {
+                result+= twoPower(i);
+            }
+            
+        }
+        
+        return result;
+    }
+    
     public static void main (String[] args) {
         ByteConverter bc = new ByteConverter();
         //System.out.println(bc.twoPower(0));
         //bc.printBitArray(bc.convertByteToBits(Byte.parseByte("-1")));
-        bc.convertIntegerToBitplane(1999999999);
+        //bc.convertIntegerToBitplane(1999999999);
+        System.out.println(bc.convertBitplaneToInteger(bc.convertIntegerToBitplane(1999999999)));
         //System.out.println(bc.convertBitsToByte(bc.convertByteToBits(Byte.parseByte("110"))));
         
     }
