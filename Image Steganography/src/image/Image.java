@@ -30,7 +30,6 @@ import processor.Pixel;
  */
 public class Image {
     // Atribut
-    private byte[][] bytes;
     private String path;
     private int pixelSize;
     private Pixel[][] pixels;
@@ -45,8 +44,8 @@ public class Image {
     }
     
     // Getter
-    public byte[][] getBytes() {
-        return bytes;
+    public Pixel[][] getPixel() {
+        return pixels;
     }
     
     public String getPath() {
@@ -58,10 +57,10 @@ public class Image {
     }
     
     // Setter
-    public void setBytes(byte[][] bytes) {
-        this.bytes = new byte[bytes.length][bytes[0].length];
-        for (int i = 0; i < bytes.length; i++) {
-            System.arraycopy(bytes[i], 0, this.bytes[i], 0, bytes[i].length);
+    public void setPixels(Pixel[][] pixels) {
+        this.pixels = new Pixel[pixels.length][pixels[0].length];
+        for (int i = 0; i < pixels.length; i++) {
+            System.arraycopy(pixels[i], 0, this.pixels[i], 0, pixels[i].length);
         }
     }
     
@@ -91,6 +90,7 @@ public class Image {
         return dataByte;
     }
     
+    //Convert Image to Pixels untuk yang origin
     public void convertImageToPixels() {
         // Masukkin ke Pixels
         try {
@@ -121,6 +121,40 @@ public class Image {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    //Untuk gambar bebas
+    public Pixel[][] convertImagesToPixels(String path) {
+        // Masukkin ke Pixels
+        try {
+            File imgPath = new File(path);
+            BufferedImage bufferedImage;
+            bufferedImage = ImageIO.read(imgPath);
+            
+            byte[] dataByte = getBytesFromImage(bufferedImage);
+            
+            int cols = bufferedImage.getHeight();
+            int rows = bufferedImage.getWidth();
+            Pixel[][] pixels = new Pixel[cols][rows];
+            
+            System.out.println(dataByte.length);
+            int idx = 0;
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < rows; j++) {
+                    pixels[i][j] = new Pixel(pixelSize);
+                    byte[] byteTemp = new byte[pixelSize/8];
+                    for (int k = 0; k < pixelSize/8; k++) {
+                        byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
+                        //System.out.println(idx + k+(j*(pixelSize/8))+(i*cols*pixelSize/8));
+                    }
+                    pixels[i][j].setBytes(byteTemp);
+                }
+            }  
+        } catch (IOException ex) {
+            Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return pixels;
     }
 
     private byte[] convertPixelsToBytes() {
@@ -257,23 +291,42 @@ public class Image {
         return image;
     }
     
+    public double countRMS(Pixel[][] pixOrigin, Pixel[][] pixStegano) {
+        double res;
+        int col = pixOrigin.length;
+        int row = pixOrigin[0].length;
+        double total = (double)(col*row);
+        
+        double sum = 0;
+        for (int i = 0; i < col; i++) {
+            for (int j = 0; j < row; j++) {
+                for (int k = 0; k < pixOrigin[0][0].getSize()/8; k++) {
+                    sum += Math.pow((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]),2);
+                }
+            }
+        }
+        res = Math.sqrt(sum/total);
+        return res;
+    }
+    
+    public void checkImageQuality () {
+        
+    }
+    
     public static void main(String args[]) throws IOException {
-        String path = "grayscale.png";
+        String path = "mushroom.png";
         Image img = new Image(path);
         img.convertImageToPixels();
         img.convertPixelsToBufferedImage();
         img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
         //img.convertImageToPixel();
         
-        //img.getBytesFromImage();
-        //img.extractByte();
-        //img.printBytes();
-        //System.out.println(img.extractByte());
+        Pixel[][] pixels = img.convertImagesToPixels("newcoba.png");
+        for (int i = 0; i < 80; i++) {
+            pixels[i][0].getBytes()[1] = (byte) 100;
+        }
         
-        //System.out.println();
-        //ImageIO.write(img.convertBytesToBufferedImage(),"png",new File("mush.png"));
-        //img.printBlockMatrix(img.convertBytesToBlocks());
-        
+        System.out.println(img.countRMS(img.getPixel(), pixels));
         
     }
     
