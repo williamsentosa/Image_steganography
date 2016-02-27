@@ -47,15 +47,15 @@ public class Steganography {
         }
         Bitplane[] messages = message.convertToBitplane();
         Bitplane messagesLengthInfo = new Bitplane();
-        ConjugationTable table = new ConjugationTable(messages.length);
+        ConjugationTable table = new ConjugationTable(message.getLength());
         int n = 0;
         double threshold = 0.3;
         
         for(int j=0; j<listBitplanes.size(); j++) {
             for(int i=0; i<listBitplanes.get(j).length; i++) {
                 listBitplanes.get(j)[i].convertToCGC();
-                if(n < messages.length) {
-                    if(listBitplanes.get(j)[i].isNoisy(0.3)) {
+                if(n < messages.length) {    
+                    if(listBitplanes.get(j)[i].isNoisy(threshold)) {
                         if(messages[n].isNoisy(threshold)) {
                             table.addSign(new Bit(false));
                             listBitplanes.get(j)[i] = messages[n];
@@ -67,12 +67,40 @@ public class Steganography {
                         n++;
                     }
                 }
-                
+                listBitplanes.get(j)[i].deconvertToPBC();
+            }
+        }
+        
+        n = 0;
+        Bitplane[] tableBitplane = table.getBitplanes();
+        System.out.println("Length : " + tableBitplane.length);
+        for(int i=0; i<tableBitplane.length; i++) {
+            Bit[][] bit = tableBitplane[i].getBits();
+            System.out.println(bit.length + " " + bit[i].length);
+            for(int j=0; j<bit.length; j++) {
+                for(int k=0; k<bit[j].length; k++) {
+                    System.out.print(bit[j][k].convertToInt());
+                }
+                System.out.println();
+            }
+            System.out.println("*********************");
+        }
+        
+        for(int i = listBitplanes.size()-1; i >= 0; i--) {
+            for(int j=listBitplanes.get(i).length; j >= 0; j--) {
+                if(n < tableBitplane.length) {    
+                    if(listBitplanes.get(i)[j].isNoisy(threshold)) {
+                        listBitplanes.get(i)[j] = tableBitplane[n];
+                        n++;
+                    }
+                } else {
+                    break;
+                }
             }
         }
         
         for(int j=0; j<listBitplanes.size(); j++) {
-            for(int i=0; i<listBitplanes.get(j).length; i++) {
+            for(int i=0; i<listBitplanes.get(j).length; i++) {    
                 listBitplanes.get(j)[i].deconvertToPBC();
             }
         }
@@ -84,6 +112,8 @@ public class Steganography {
                 blocks[i][j].deconvertFromBitplanes();
             }
         }
+        
+         
         
         this.image.convertBlocksToPixels(blocks);
         this.image.convertPixelsToBufferedImage();
@@ -100,11 +130,11 @@ public class Steganography {
     }
     
     public static void main (String[] args) {
-        Image image = new Image("grayscale.png");
+        Image image = new Image("flower.png");
         Steganography stegano = new Steganography(image);
         Message message;
         try {
-            message = new Message("pesan.docx");
+            message = new Message("pesan3.pdf");
             stegano.hideInformation(message, "haha");
         } catch (IOException ex) {
             Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);

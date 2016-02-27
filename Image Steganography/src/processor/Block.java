@@ -50,7 +50,6 @@ public class Block {
         for (int i = 0; i < pixels.length; i ++) {
             for(int j = 0; j < pixels[i].length; j++) {
                 pixels[i][j].convertToBits();
-                pixels[i][j].printPixel();
                 Bit[] bits = pixels[i][j].getBits();
                 bitsTemp[i][j] = pixels[i][j].getBits();
             }

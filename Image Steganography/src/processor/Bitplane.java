@@ -95,8 +95,6 @@ public class Bitplane {
                 }
             }
         }
-        System.out.println("Jumlah : " + countChangeColorsFrequency);
-        System.out.println((double)countChangeColorsFrequency/(double)maxFrequency);
         return (double)countChangeColorsFrequency/(double)maxFrequency > threshold;
     }
     

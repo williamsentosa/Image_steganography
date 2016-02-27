@@ -40,7 +40,6 @@ public class ByteConverter {
          
         if (b < 0) {
             b += 256;
-            System.out.println(b);
         }
            
         for (int i = 1; i <= 8; i++) {
