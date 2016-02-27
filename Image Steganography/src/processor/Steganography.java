@@ -95,6 +95,7 @@ public class Steganography {
                 }
             }
         }
+        
         if(n < messages.length) return false;
   
         for(int j=0; j<listBitplanes.size(); j++) {
@@ -203,29 +204,26 @@ public class Steganography {
         Image image = new Image("flower.png");
         Steganography stegano = new Steganography(image);
         Message message;
-        Boolean result = false;
+        Boolean success = true;
         try {
-            message = new Message("pesan2.docx");
+            message = new Message("pesan.docx");
             message.printMessage();
-            result = stegano.hideInformation(message, "haha");
-            if(result) System.out.println("File is too big to be hidden");
+            success = stegano.hideInformation(message, "haha");
+            if(!success) System.out.println("File is too big to be hidden");
         } catch (IOException ex) {
             Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        Image image2 = new Image("new1.png");
-        Steganography stegano2 = new Steganography(image2);
-        Message message2 = stegano2.extractInformation(null);
-        message2.printMessage();
-        if(!result) {
+        if(success) {
+            Image image2 = new Image("new1.png");
+            Steganography stegano2 = new Steganography(image2);
+            Message message2 = stegano2.extractInformation(null);
+            message2.printMessage();
             try {
                 message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "hasil");
             } catch (IOException ex) {
                 Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
     }
     
 }
