@@ -52,10 +52,6 @@ public class Block {
                 pixels[i][j].convertToBits();
                 pixels[i][j].printPixel();
                 Bit[] bits = pixels[i][j].getBits();
-                for(int a=0; a<bits.length; a++) {
-                    System.out.print(bits[a].convertToInt());
-                }
-                System.out.println();
                 bitsTemp[i][j] = pixels[i][j].getBits();
             }
         }
@@ -85,8 +81,9 @@ public class Block {
             }
         }
         for (int i = 0; i < bitsTemp.length; i ++) {
-            for(int j=0; j < bitsTemp[i].length; j++) {
+            for(int j = 0; j < bitsTemp[i].length; j++) {
                 pixels[i][j].setBits(bitsTemp[i][j]);
+                pixels[i][j].deconvertToPixel();
             }
         }
     }
@@ -113,6 +110,8 @@ public class Block {
             }
             System.out.println("************************************************");
         }
+        blocks[0][0].deconvertFromBitplanes();
+        blocks[0][0].getPixels()[0][0].printPixel();
         
     }
     

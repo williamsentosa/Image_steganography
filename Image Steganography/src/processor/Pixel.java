@@ -75,7 +75,7 @@ public class Pixel {
     public static void main(String[] args) {
         Pixel pixel = new Pixel(24);
         byte[] bytes = new byte[3];
-        bytes[0] = -1;
+        bytes[0] = -100;
         bytes[1] = -1;
         bytes[2] = -1;
         pixel.setBytes(bytes);
