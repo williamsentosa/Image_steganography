@@ -20,10 +20,10 @@ public class ConjugationTable {
      * @param msgSize the size of message in byte
      */
     public ConjugationTable(int msgSize) {
-        if(msgSize/8 % 8 == 0) {
-            size = msgSize/8; 
+        if((msgSize % 64) == 0) {
+            size = (msgSize / 64) * 8; 
         } else {
-            size = msgSize/8 + 1;
+            size = ((msgSize / 64) + 1) * 8;
         }
         bitplanes = new Bitplane[size];
         x = 0;

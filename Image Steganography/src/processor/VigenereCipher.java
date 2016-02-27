@@ -10,22 +10,15 @@ package processor;
  * @author angelynz95
  */
 public class VigenereCipher {
-    // Atribut
-    private String textResult;
     
     // Konstruktor
     public VigenereCipher() {
-        textResult = "";
-    }
-    
-    // Getter
-    public String getTextResult() {
-        return textResult;
+        // do nothing
     }
     
     // Method
     // Mengembalikan Vigenere Cipher Extended, menerapkan Bujursangkar Vigenere
-    public void encryptExtended(String plain, String key) {
+    public String encryptExtended(String plain, String key) {
         int keyIndex;
         String encryption = "";
         
@@ -35,11 +28,11 @@ public class VigenereCipher {
             encryption += getExtendedCipher(plain.charAt(i), key.charAt(keyIndex));
         }
         
-        textResult = encryption;
+        return encryption;
     }
     
     // Mengembalikan plain text, menerapkan Bujursangkar Vigenere
-    public void decryptExtended(String cipher, String key) {
+    public String decryptExtended(String cipher, String key) {
         int keyIndex;
         String decryption = "";
         
@@ -49,7 +42,7 @@ public class VigenereCipher {
             decryption += getExtendedPlain(cipher.charAt(i), key.charAt(keyIndex));
         }
         
-        textResult = decryption;
+        return decryption;
     }
     
     // Mengembalikan Vigenere Cipher Extended, menerapkan Bujursangkar Vigenere
@@ -70,34 +63,6 @@ public class VigenereCipher {
         char plain = (char) ((cipherAscii + 256 - keyAscii) % 256);
         
         return plain;
-    }
-    
-    // Mengembalikan textResult tanpa spasi
-    public String getTextResultNoSpace() {
-        String text = textResult.replaceAll(" ", "");
-        text = text.replaceAll("\n", "");
-        text = text.replaceAll("\t", "");
-        
-        return text;
-    }
-    
-    // Mengembalikan textResult dalam kelompok 5-huruf
-    public String getTextResultInFive() {
-        int count = 0, i = 0;
-        String temp = getTextResultNoSpace(), text = "";
-        
-        while (i < temp.length()) {
-            if ((i + 5) < temp.length()) {
-                text += temp.substring(i, i + 5);
-            } else {
-                text += temp.substring(i, temp.length());
-            }
-            text += " ";
-            
-            i+=5;
-        }
-        
-        return text;
     }
     
     public static void main(String[] args) {
