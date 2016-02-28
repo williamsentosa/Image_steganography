@@ -20,6 +20,8 @@ public class MainPanel extends javax.swing.JPanel {
         initComponents();
         hideMessagePanel.setLayout(new FlowLayout());
         hideMessagePanel.add(new HideMessagePanel());
+        extractMessagePanel.setLayout(new FlowLayout());
+        extractMessagePanel.add(new ExtractMessagePanel());
     }
 
     /**

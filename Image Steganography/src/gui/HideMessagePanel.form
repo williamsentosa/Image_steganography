@@ -21,32 +21,25 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="browseImageTextField" pref="845" max="32767" attributes="0"/>
-                          <Component id="browseMessageTextField" max="32767" attributes="0"/>
+                          <Component id="browseMessageTextField" pref="845" max="32767" attributes="0"/>
+                          <Component id="browseImageTextField" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="browseImageButton" max="32767" attributes="0"/>
                           <Component id="browseMessageButton" max="32767" attributes="0"/>
-                          <Component id="convertButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="browseImageButton" alignment="1" max="32767" attributes="0"/>
+                          <Component id="convertButton" alignment="1" min="-2" pref="135" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="coverImagePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                      <EmptySpace pref="59" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="keyTextField" alignment="0" max="32767" attributes="0"/>
-                          <Component id="thresholdTextField" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="encryptionLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="keyLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="encryptionYesRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="encryptionNoRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="274" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="thresholdTextField" alignment="0" min="-2" pref="364" max="-2" attributes="0"/>
+                          <Component id="thresholdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="keyLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="encryptionCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="keyTextField" min="-2" pref="364" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -69,24 +62,20 @@
               </Group>
               <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="coverImagePanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
+                      <Component id="encryptionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="keyLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="keyTextField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="thresholdTextField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
-                      <Component id="encryptionLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="encryptionYesRadioButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="encryptionNoRadioButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="92" max="32767" attributes="0"/>
+                      <EmptySpace pref="170" max="32767" attributes="0"/>
                       <Component id="convertButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="coverImagePanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
           </Group>
@@ -152,6 +141,7 @@
           <Font name="Roboto" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Key"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="keyTextField">
@@ -159,6 +149,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Roboto" size="16" style="0"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="thresholdLabel">
@@ -176,30 +167,6 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="encryptionLabel">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Roboto" size="16" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Encryption"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="encryptionYesRadioButton">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Roboto" size="16" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Yes"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JRadioButton" name="encryptionNoRadioButton">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Roboto" size="16" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="No"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="convertButton">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -210,6 +177,14 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="convertButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="encryptionCheckBox">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Roboto" size="16" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Encryption"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

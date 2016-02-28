@@ -36,10 +36,8 @@ public class HideMessagePanel extends javax.swing.JPanel {
         keyTextField = new javax.swing.JTextField();
         thresholdLabel = new javax.swing.JLabel();
         thresholdTextField = new javax.swing.JTextField();
-        encryptionLabel = new javax.swing.JLabel();
-        encryptionYesRadioButton = new javax.swing.JRadioButton();
-        encryptionNoRadioButton = new javax.swing.JRadioButton();
         convertButton = new javax.swing.JButton();
+        encryptionCheckBox = new javax.swing.JCheckBox();
 
         browseImageTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
@@ -66,22 +64,15 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
         keyLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         keyLabel.setText("Key");
+        keyLabel.setEnabled(false);
 
         keyTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        keyTextField.setEnabled(false);
 
         thresholdLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         thresholdLabel.setText("Threshold");
 
         thresholdTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-
-        encryptionLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        encryptionLabel.setText("Encryption");
-
-        encryptionYesRadioButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        encryptionYesRadioButton.setText("Yes");
-
-        encryptionNoRadioButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        encryptionNoRadioButton.setText("No");
 
         convertButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         convertButton.setText("Convert");
@@ -90,6 +81,9 @@ public class HideMessagePanel extends javax.swing.JPanel {
                 convertButtonActionPerformed(evt);
             }
         });
+
+        encryptionCheckBox.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        encryptionCheckBox.setText("Encryption");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,27 +94,22 @@ public class HideMessagePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(browseImageTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE)
-                            .addComponent(browseMessageTextField))
+                            .addComponent(browseMessageTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE)
+                            .addComponent(browseImageTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(browseImageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(browseMessageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(convertButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(browseImageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(convertButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(coverImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(74, 74, 74)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(keyTextField)
-                            .addComponent(thresholdTextField)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(encryptionLabel)
-                                    .addComponent(thresholdLabel)
-                                    .addComponent(keyLabel)
-                                    .addComponent(encryptionYesRadioButton)
-                                    .addComponent(encryptionNoRadioButton))
-                                .addGap(0, 274, Short.MAX_VALUE)))))
+                            .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(thresholdLabel)
+                            .addComponent(keyLabel)
+                            .addComponent(encryptionCheckBox)
+                            .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
@@ -136,23 +125,19 @@ public class HideMessagePanel extends javax.swing.JPanel {
                     .addComponent(browseMessageButton))
                 .addGap(75, 75, 75)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(coverImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(encryptionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(keyLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(44, 44, 44)
                         .addComponent(thresholdLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71)
-                        .addComponent(encryptionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(encryptionYesRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(encryptionNoRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-                        .addComponent(convertButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addComponent(convertButton))
+                    .addComponent(coverImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(76, 76, 76))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -169,9 +154,7 @@ public class HideMessagePanel extends javax.swing.JPanel {
     private javax.swing.JTextField browseMessageTextField;
     private javax.swing.JButton convertButton;
     private javax.swing.JPanel coverImagePanel;
-    private javax.swing.JLabel encryptionLabel;
-    private javax.swing.JRadioButton encryptionNoRadioButton;
-    private javax.swing.JRadioButton encryptionYesRadioButton;
+    private javax.swing.JCheckBox encryptionCheckBox;
     private javax.swing.JLabel keyLabel;
     private javax.swing.JTextField keyTextField;
     private javax.swing.JLabel thresholdLabel;
