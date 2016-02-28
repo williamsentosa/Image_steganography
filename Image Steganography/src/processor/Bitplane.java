@@ -7,7 +7,9 @@ package processor;
 
 /**
  *
- * @author angelynz95
+ * @author William Sentosa - 13513026
+ * @author Candy Olivia Mawalim - 13513031
+ * @author Angela Lynn - 13513032
  */
 public class Bitplane {
     // Atribut

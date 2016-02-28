@@ -9,7 +9,9 @@ import image.Image;
 
 /**
  *
- * @author Candy Olivia Mawalim
+ * @author William Sentosa - 13513026
+ * @author Candy Olivia Mawalim - 13513031
+ * @author Angela Lynn - 13513032
  */
 public class Block {
     // Atribut

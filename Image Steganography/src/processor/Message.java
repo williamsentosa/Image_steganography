@@ -16,7 +16,9 @@ import java.nio.file.Paths;
 
 /**
  *
- * @author William Sentosa
+ * @author William Sentosa - 13513026
+ * @author Candy Olivia Mawalim - 13513031
+ * @author Angela Lynn - 13513032
  */
 public class Message {
     private byte[] message;
@@ -47,17 +49,16 @@ public class Message {
         String tempString;
         
         Path filePath = Paths.get(path);
-//        tempMessage = Files.readAllBytes(filePath);
-//        // Menyisipkan extension file ke dalam message
-//        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
-//        extensionIndex = filePath.toString().lastIndexOf(".");
-//        if (extensionIndex == -1) {
-//            tempString += ".";
-//        } else {
-//            tempString += filePath.toString().substring(extensionIndex);
-//        }
-//        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
-        message = Files.readAllBytes(filePath);
+        tempMessage = Files.readAllBytes(filePath);
+        // Menyisipkan extension file ke dalam message
+        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
+        extensionIndex = filePath.toString().lastIndexOf(".");
+        if (extensionIndex == -1) {
+            tempString += ".";
+        } else {
+            tempString += filePath.toString().substring(extensionIndex);
+        }
+        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
         vigenereCipher = new VigenereCipher();
     }
@@ -75,17 +76,16 @@ public class Message {
         String tempString;
         
         Path filePath = Paths.get(path);
-//        tempMessage = Files.readAllBytes(filePath);
-//        // Menyisipkan extension file ke dalam message
-//        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
-//        extensionIndex = filePath.toString().lastIndexOf(".");
-//        if (extensionIndex == -1) {
-//            tempString += ".";
-//        } else {
-//            tempString += filePath.toString().substring(extensionIndex);
-//        }
-//        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
-        message = Files.readAllBytes(filePath);
+        tempMessage = Files.readAllBytes(filePath);
+        // Menyisipkan extension file ke dalam message
+        tempString = new String(tempMessage, StandardCharsets.ISO_8859_1);
+        extensionIndex = filePath.toString().lastIndexOf(".");
+        if (extensionIndex == -1) {
+            tempString += ".";
+        } else {
+            tempString += filePath.toString().substring(extensionIndex);
+        }
+        message = tempString.getBytes(StandardCharsets.ISO_8859_1);
         length = message.length;
     }
     
@@ -232,15 +232,13 @@ public class Message {
         int extensionIndex;
         String tempString;
         
-//        tempString = new String(message, StandardCharsets.ISO_8859_1);
-//        extensionIndex = tempString.lastIndexOf(".");
-//        System.out.println(path + fileName + tempString.substring(extensionIndex));
-//        tempMessage = tempString.substring(0, extensionIndex).getBytes(StandardCharsets.ISO_8859_1);
-//        
-//        fos = new FileOutputStream(path + fileName + tempString.substring(extensionIndex));
-//        fos.write(tempMessage);
-        fos = new FileOutputStream(path + fileName);
-        fos.write(message);
+        tempString = new String(message, StandardCharsets.ISO_8859_1);
+        extensionIndex = tempString.lastIndexOf(".");
+        System.out.println(path + fileName + tempString.substring(extensionIndex));
+        tempMessage = tempString.substring(0, extensionIndex).getBytes(StandardCharsets.ISO_8859_1);
+        
+        fos = new FileOutputStream(path + fileName + tempString.substring(extensionIndex));
+        fos.write(tempMessage);
         fos.close();
     }
     
@@ -253,7 +251,7 @@ public class Message {
         message2 = new Message(message.getLength());
         message2.deconvertFromBitplane(message.convertToBitplane());
         message2.decrypt("tes");
-        message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "message.docx");
+        message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "message");
     }
     
 }
