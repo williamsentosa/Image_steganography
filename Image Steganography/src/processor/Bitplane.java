@@ -125,32 +125,32 @@ public class Bitplane {
 
     public static void main(String[] args) {
         Bitplane bitplane = new Bitplane();
-//        Bit[][] wc = bitplane.makeWcPattern();
-//        bitplane.setBits(wc);
-//        for(int i=0; i<8; i++) {
-//            for(int j=0; j<8; j++) {
-//                System.out.print(wc[i][j].convertToInt());
-//            }
-//            System.out.println();
-//        }
-//        System.out.println("************************************");
-//        bitplane.convertToCGC();
-//        for(int i=0; i<bitplane.getSize(); i++) {
-//            for(int j=0; j<bitplane.getSize(); j++) {
-//                System.out.print(bitplane.getBits()[i][j].convertToInt());
-//            }
-//            System.out.println();
-//        }
-//        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
-//        System.out.println("************************************");
-//        bitplane.deconvertToPBC();
-//        for(int i=0; i<bitplane.getSize(); i++) {
-//            for(int j=0; j<bitplane.getSize(); j++) {
-//                System.out.print(bitplane.getBits()[i][j].convertToInt());
-//            }
-//            System.out.println();
-//        }
-//        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
+        Bit[][] wc = bitplane.makeWcPattern();
+        bitplane.setBits(wc);
+        for(int i=0; i<8; i++) {
+            for(int j=0; j<8; j++) {
+                System.out.print(wc[i][j].convertToInt());
+            }
+            System.out.println();
+        }
+        System.out.println("************************************");
+        bitplane.convertToCGC();
+        for(int i=0; i<bitplane.getSize(); i++) {
+            for(int j=0; j<bitplane.getSize(); j++) {
+                System.out.print(bitplane.getBits()[i][j].convertToInt());
+            }
+            System.out.println();
+        }
+        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
+        System.out.println("************************************");
+        bitplane.deconvertToPBC();
+        for(int i=0; i<bitplane.getSize(); i++) {
+            for(int j=0; j<bitplane.getSize(); j++) {
+                System.out.print(bitplane.getBits()[i][j].convertToInt());
+            }
+            System.out.println();
+        }
+        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
     }
     
 }

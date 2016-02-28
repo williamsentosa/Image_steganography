@@ -18,9 +18,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import javax.swing.JFrame;
+import processor.Bitplane;
 import processor.Block;
 
 import processor.ByteConverter;
+import processor.Message;
 import processor.Pixel;
 
 
@@ -365,10 +367,43 @@ public class Image {
     }
     
     public static void main(String args[]) throws IOException {
-        String path = "Mushroom.png";
+        String path = "flower.png";
         Image img = new Image(path);
         //img.convertImageToBlocks();
-        img.convertImageToPixels();
+        Block[][] blocks = img.convertImageToBlocks();
+        System.out.println(blocks.length);
+        int x,y,z;
+        x = 0;
+        y = 0;
+        z = 10;
+        blocks[x][y].convertToBitplanes();
+        Bitplane bp= new Bitplane();
+        ByteConverter conv = new ByteConverter();
+        bp.setBits(conv.convertIntegerToBitplane(23232));
+        blocks[x][y].getBitplanes()[z].setBits(bp.getBits());
+        blocks[x][y].deconvertFromBitplanes();
+        System.out.println("x : " + x + " y : " + y + " z : " + z);
+        for(int a=0; a<blocks[x][y].getBitplanes()[z].getBits().length; a++) {
+            for(int b=0; b<blocks[x][y].getBitplanes()[z].getBits()[a].length; b++) {
+                System.out.print(blocks[x][y].getBitplanes()[z].getBits()[a][b].convertToInt());
+            }
+            System.out.println();
+        }
+        
+        img.convertBlocksToPixels(blocks);
+        img.convertPixelsToBufferedImage();
+        
+        path = "new1.png";
+        img = new Image(path);
+        Block[][] blocks2 = img.convertImageToBlocks();
+        System.out.println("x : " + x + " y : " + y + " z : " + z);
+        blocks2[x][y].convertToBitplanes();
+        for(int a=0; a<blocks2[x][y].getBitplanes()[z].getBits().length; a++) {
+            for(int b=0; b<blocks2[x][y].getBitplanes()[z].getBits()[a].length; b++) {
+                System.out.print(blocks2[x][y].getBitplanes()[z].getBits()[a][b].convertToInt());
+            }
+            System.out.println();
+        }
         //img.convertPixelsToBufferedImage();
         
         //img.convertPixelsToBlocks();

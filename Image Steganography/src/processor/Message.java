@@ -36,6 +36,11 @@ public class Message {
         System.out.println();
     }
     
+    public void printMessage(int n) {
+            System.out.print(message[n] + " ");
+        System.out.println();
+    }
+    
     public Message(String path) throws IOException {
         byte[] tempMessage;
         int extensionIndex;
