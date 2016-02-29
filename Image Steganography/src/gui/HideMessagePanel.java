@@ -5,9 +5,13 @@
  */
 package gui;
 
+import javax.swing.JFileChooser;
+
 /**
  *
- * @author angelynz95
+ * @author William Sentosa - 13513026
+ * @author Candy Olivia Mawalim - 13513031
+ * @author Angela Lynn - 13513032
  */
 public class HideMessagePanel extends javax.swing.JPanel {
 
@@ -45,6 +49,11 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
         browseImageButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         browseImageButton.setText("Browse Image");
+        browseImageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseImageButtonActionPerformed(evt);
+            }
+        });
 
         browseMessageButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         browseMessageButton.setText("Browse Message");
@@ -145,6 +154,12 @@ public class HideMessagePanel extends javax.swing.JPanel {
     private void convertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_convertButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_convertButtonActionPerformed
+
+    private void browseImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseImageButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        
+    }//GEN-LAST:event_browseImageButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

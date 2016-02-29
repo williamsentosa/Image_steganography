@@ -104,6 +104,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Browse Image"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseImageButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="browseMessageButton">
       <Properties>

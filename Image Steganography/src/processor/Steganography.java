@@ -8,7 +8,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author William Sentosa
+ * @author William Sentosa - 13513026
+ * @author Candy Olivia Mawalim - 13513031
+ * @author Angela Lynn - 13513032
  */
 public class Steganography {
     private Image image;
