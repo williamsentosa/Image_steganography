@@ -186,7 +186,7 @@ public class Image {
         return resultByte;
     }
     
-    public BufferedImage convertPixelsToBufferedImage() {
+    public BufferedImage convertPixelsToBufferedImage(String filename) {
         BufferedImage image = null;
         try {
             byte[] dataByte = convertPixelsToBytes();
@@ -206,7 +206,7 @@ public class Image {
             }
             
             image.setData(Raster.createRaster(image.getSampleModel(), new DataBufferByte(dataByte, dataByte.length), new Point()));
-            ImageIO.write(image,"png",new File("new1.png"));
+            ImageIO.write(image,"png",new File(filename));
             
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
@@ -391,7 +391,7 @@ public class Image {
         }
         
         img.convertBlocksToPixels(blocks);
-        img.convertPixelsToBufferedImage();
+        img.convertPixelsToBufferedImage("new1.png");
         
         path = "new1.png";
         img = new Image(path);

@@ -42,7 +42,7 @@ public class Steganography {
      * @param key
      * @return 
      */
-    public boolean hideInformation(Message message, String key, float threshold) {
+    public boolean hideInformation(Message message, float threshold, String filename) {
         System.out.println("*** Hiding ***");
         ArrayList<Bitplane[]> listBitplanes = new ArrayList<>();
         Block[][] blocks = image.convertImageToBlocks();
@@ -153,7 +153,7 @@ public class Steganography {
         }
                 
         this.image.convertBlocksToPixels(blocks);
-        this.image.convertPixelsToBufferedImage();      
+        this.image.convertPixelsToBufferedImage(filename);      
         return true;
     }
    
@@ -301,16 +301,17 @@ public class Steganography {
         Message message;
         float threshold = (float) 0.3;
         Boolean success = true;
+        String filename = "new1.png";
         try {
             message = new Message("pesan.docx");
             message.printMessage();
-            success = stegano.hideInformation(message, "haha",threshold);
+            success = stegano.hideInformation(message, threshold, filename);
             if(!success) System.out.println("File is too big to be hidden");
         } catch (IOException ex) {
             Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(success) {
-            Image image2 = new Image("new1.png");
+            Image image2 = new Image(filename);
             Steganography stegano2 = new Steganography(image2);
             Message message2 = stegano2.extractInformation(threshold);
             message2.printMessage();
