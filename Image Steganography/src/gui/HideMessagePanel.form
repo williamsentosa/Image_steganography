@@ -32,14 +32,16 @@
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="coverImagePanel" min="-2" max="-2" attributes="0"/>
+                      <Component id="coverImageLabel" min="-2" pref="622" max="-2" attributes="0"/>
                       <EmptySpace pref="59" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="thresholdTextField" alignment="0" min="-2" pref="364" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="thresholdTextField" alignment="0" pref="364" max="32767" attributes="0"/>
                           <Component id="thresholdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="keyLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="encryptionCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="keyTextField" min="-2" pref="364" max="-2" attributes="0"/>
+                          <Component id="keyTextField" pref="364" max="32767" attributes="0"/>
+                          <Component id="stegoImageNameLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="stegoImageNameTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -72,10 +74,14 @@
                       <Component id="thresholdLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="thresholdTextField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Component id="stegoImageNameLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="stegoImageNameTextField" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="79" max="32767" attributes="0"/>
                       <Component id="convertButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="coverImagePanel" max="32767" attributes="0"/>
+                  <Component id="coverImageLabel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
           </Group>
@@ -115,29 +121,10 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Browse Message"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseMessageButtonActionPerformed"/>
+      </Events>
     </Component>
-    <Container class="javax.swing.JPanel" name="coverImagePanel">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="618" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
     <Component class="javax.swing.JLabel" name="keyLabel">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -187,6 +174,34 @@
           <Font name="Roboto" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Encryption"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="encryptionCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="coverImageLabel">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="stegoImageNameLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Roboto" size="16" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Stego Image Name"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="stegoImageNameTextField">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Roboto" size="16" style="0"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

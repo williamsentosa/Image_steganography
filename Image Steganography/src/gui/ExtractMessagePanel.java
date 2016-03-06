@@ -5,6 +5,18 @@
  */
 package gui;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import processor.Message;
+import processor.Steganography;
+
 /**
  *
  * @author William Sentosa - 13513026
@@ -31,11 +43,13 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
         browseTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        stegoImagePanel = new javax.swing.JPanel();
         saveMessageButton = new javax.swing.JButton();
         decryptionCheckBox = new javax.swing.JCheckBox();
         keyLabel = new javax.swing.JLabel();
         keyTextField = new javax.swing.JTextField();
+        thresholdLabel = new javax.swing.JLabel();
+        thresholdTextField = new javax.swing.JTextField();
+        stegoImageLabel = new javax.swing.JLabel();
 
         browseTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         browseTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -46,25 +60,27 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
         browseButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         browseButton.setText("Browse");
-
-        stegoImagePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout stegoImagePanelLayout = new javax.swing.GroupLayout(stegoImagePanel);
-        stegoImagePanel.setLayout(stegoImagePanelLayout);
-        stegoImagePanelLayout.setHorizontalGroup(
-            stegoImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 618, Short.MAX_VALUE)
-        );
-        stegoImagePanelLayout.setVerticalGroup(
-            stegoImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
-        );
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
 
         saveMessageButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         saveMessageButton.setText("Save Message");
+        saveMessageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMessageButtonActionPerformed(evt);
+            }
+        });
 
         decryptionCheckBox.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         decryptionCheckBox.setText("Decryption");
+        decryptionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decryptionCheckBoxActionPerformed(evt);
+            }
+        });
 
         keyLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         keyLabel.setText("Key");
@@ -72,6 +88,14 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
         keyTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         keyTextField.setEnabled(false);
+
+        thresholdLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        thresholdLabel.setText("Threshold");
+
+        thresholdTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+
+        stegoImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        stegoImageLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -85,15 +109,16 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                         .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(saveMessageButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(stegoImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stegoImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(keyLabel)
-                            .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(decryptionCheckBox))))
+                            .addComponent(saveMessageButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(keyLabel)
+                                .addComponent(keyTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                                .addComponent(decryptionCheckBox)
+                                .addComponent(thresholdLabel)
+                                .addComponent(thresholdTextField)))))
                 .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
@@ -103,7 +128,7 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(browseButton)
                     .addComponent(browseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addGap(113, 113, 113)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(decryptionCheckBox)
@@ -111,11 +136,13 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
                         .addComponent(keyLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(45, 45, 45)
+                        .addComponent(thresholdLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
                         .addComponent(saveMessageButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(stegoImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(stegoImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(76, 76, 76))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -123,6 +150,70 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
     private void browseTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_browseTextFieldActionPerformed
+
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
+        int returnVal = fileChooser.showOpenDialog(this);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                BufferedImage image = ImageIO.read(fileChooser.getSelectedFile());
+                
+                browseTextField.setText(fileChooser.getSelectedFile().getPath());
+                if ((image.getWidth() > stegoImageLabel.getWidth()) && (image.getHeight() > stegoImageLabel.getHeight())) {
+                    if (image.getWidth() > image.getHeight()) {
+                        stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(stegoImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                    } else {
+                        stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, stegoImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+                    }
+                } else if (image.getWidth() > stegoImageLabel.getWidth()) {
+                    stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(stegoImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                } else if (image.getHeight() > stegoImageLabel.getHeight()) {
+                    stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, stegoImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+                } else {
+                    stegoImageLabel.setIcon(new ImageIcon(image));
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(HideMessagePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            browseTextField.setText("");
+            stegoImageLabel.setIcon(null);
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void decryptionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptionCheckBoxActionPerformed
+        // TODO add your handling code here:
+        if (decryptionCheckBox.isSelected()) {
+            keyLabel.setEnabled(true);
+            keyTextField.setEnabled(true);
+        } else {
+            keyLabel.setEnabled(false);
+            keyTextField.setEnabled(false);
+        }
+    }//GEN-LAST:event_decryptionCheckBoxActionPerformed
+
+    private void saveMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMessageButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
+        Steganography stego = new Steganography(new image.Image(browseTextField.getText()));
+        Message message = stego.extractInformation(Float.parseFloat(thresholdTextField.getText()));
+        
+        if (decryptionCheckBox.isSelected()) {
+            message.decrypt(keyTextField.getText());
+        }
+        int returnVal = fileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                System.out.println("CURRENT DIRECTORY " + fileChooser.getCurrentDirectory().toString());
+                System.out.println("NAMA FILE " + fileChooser.getSelectedFile().getName());
+                message.save(fileChooser.getCurrentDirectory().toString() + "\\", fileChooser.getSelectedFile().getName());
+            } catch (IOException ex) {
+                Logger.getLogger(StegoImageFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_saveMessageButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -132,6 +223,8 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
     private javax.swing.JLabel keyLabel;
     private javax.swing.JTextField keyTextField;
     private javax.swing.JButton saveMessageButton;
-    private javax.swing.JPanel stegoImagePanel;
+    private javax.swing.JLabel stegoImageLabel;
+    private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JTextField thresholdTextField;
     // End of variables declaration//GEN-END:variables
 }

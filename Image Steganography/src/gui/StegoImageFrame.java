@@ -6,7 +6,17 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import processor.Message;
+import processor.Steganography;
 
 /**
  *
@@ -15,14 +25,43 @@ import java.awt.Toolkit;
  * @author Angela Lynn - 13513032
  */
 public class StegoImageFrame extends javax.swing.JFrame {
+    private Steganography stego;
+    private image.Image coverImage;
 
     /**
      * Creates new form StegoImageFrame
      */
-    public StegoImageFrame() {
+    public StegoImageFrame() throws IOException {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2 - 20);
+        stego = HideMessagePanel.getStego();
+        coverImage = HideMessagePanel.getCoverImage();
+        
+        showImage();
+//        qualityLabel.setVisible(false);
+        showQuality();
+    }
+    
+    private void showImage() throws IOException {
+        Image image = ImageIO.read(new File(stego.getImage().getPath()));
+        if ((stego.getImage().getPixel().length > stegoImageLabel.getWidth()) && (stego.getImage().getPixel()[0].length > stegoImageLabel.getHeight())) {
+            if (stego.getImage().getPixel().length > stego.getImage().getPixel()[0].length) {
+                stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(stegoImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+            } else {
+                stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, stegoImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+            }
+        } else if (stego.getImage().getPixel().length > stegoImageLabel.getWidth()) {
+            stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(stegoImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+        } else if (stego.getImage().getPixel()[0].length > stegoImageLabel.getHeight()) {
+            stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, stegoImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+        } else {
+            stegoImageLabel.setIcon(new ImageIcon(image));
+        }
+    }
+    
+    private void showQuality() {
+        qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(coverImage.getPixel(), stego.getImage().getPixel())));
     }
 
     /**
@@ -34,83 +73,51 @@ public class StegoImageFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        stegoImagePanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         qualityLabel = new javax.swing.JLabel();
         qualityValueLabel = new javax.swing.JLabel();
+        stegoImageLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        stegoImagePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout stegoImagePanelLayout = new javax.swing.GroupLayout(stegoImagePanel);
-        stegoImagePanel.setLayout(stegoImagePanelLayout);
-        stegoImagePanelLayout.setHorizontalGroup(
-            stegoImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
-        );
-        stegoImagePanelLayout.setVerticalGroup(
-            stegoImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 369, Short.MAX_VALUE)
-        );
-
-        jButton1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jButton1.setText("Save Message");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jButton2.setText("Save Image");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         qualityLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         qualityLabel.setText("Quality");
 
         qualityValueLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        qualityValueLabel.setToolTipText("");
+
+        stegoImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        stegoImageLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(stegoImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(qualityLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qualityValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(81, 81, 81)
+                .addComponent(stegoImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addComponent(qualityLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(qualityValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                 .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(qualityLabel)
-                            .addComponent(qualityValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(151, 151, 151)
-                        .addComponent(jButton2)
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton1))
-                    .addComponent(stegoImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(stegoImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(qualityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(qualityValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(230, 230, 230)))
                 .addContainerGap(76, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -142,16 +149,18 @@ public class StegoImageFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StegoImageFrame().setVisible(true);
+                try {
+                    new StegoImageFrame().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(StegoImageFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel qualityLabel;
     private javax.swing.JLabel qualityValueLabel;
-    private javax.swing.JPanel stegoImagePanel;
+    private javax.swing.JLabel stegoImageLabel;
     // End of variables declaration//GEN-END:variables
 }
