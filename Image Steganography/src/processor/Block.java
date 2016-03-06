@@ -17,7 +17,6 @@ public class Block {
     // Atribut
     private Pixel[][] pixels;
     private Bitplane[] bitplanes;
-    private ByteConverter byteConverter;
     private final int size = 8;
     
     // Konstruktor
