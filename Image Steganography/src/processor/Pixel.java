@@ -74,6 +74,14 @@ public class Pixel {
         }
     }
     
+    public String toString() {
+        String result = "";
+        for(int i=0; i<this.bytes.length; i++) {
+            result = result + bytes[i] + " ";
+        }
+        return result;
+    }
+    
     public static void main(String[] args) {
         Pixel pixel = new Pixel(24);
         byte[] bytes = new byte[3];

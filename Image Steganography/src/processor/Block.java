@@ -94,6 +94,16 @@ public class Block {
         }
     }
     
+    public String toString() {
+        String result = "";
+        for(int i=0; i< pixels.length; i++) {
+            for(int j=0; j<pixels[i].length; j++) {
+                result = result + pixels[i][j] + ",";
+            }
+            result = result + "\n";
+        }
+        return result;
+    }
     
     /**
      * @param args the command line arguments

@@ -352,7 +352,7 @@ public class Image {
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < pixOrigin[0][0].getSize()/8; k++) {
-                    System.out.println(pixOrigin[i][j].getBytes()[k] + " " + pixStegano[i][j].getBytes()[k]);
+                    //System.out.println(pixOrigin[i][j].getBytes()[k] + " " + pixStegano[i][j].getBytes()[k]);
                     
                     sum += Math.pow((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]),2);
                 }

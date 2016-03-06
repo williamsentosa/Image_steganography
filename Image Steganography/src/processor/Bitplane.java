@@ -100,6 +100,26 @@ public class Bitplane {
         return (double)countChangeColorsFrequency/(double)maxFrequency > threshold;
     }
     
+    public double checkNoisy() {
+        int countChangeColorsFrequency = 0;
+        int maxFrequency = 112;
+        for(int i=0; i<size; i++) {
+            for(int j=0; j<size-1; j++) {
+                if(!(bits[i][j].isSameAs(bits[i][j+1]))) {
+                    countChangeColorsFrequency++;
+                }
+            }
+        }
+        for(int i=0; i<size; i++) {
+            for(int j=0; j<size-1; j++) {
+                if(!(bits[j][i].isSameAs(bits[j+1][i]))) {
+                    countChangeColorsFrequency++;
+                }
+            }
+        }
+        return (double)countChangeColorsFrequency/(double)maxFrequency;
+    }
+    
     private Bit[][] makeWcPattern() {
         Bit[][] result = new Bit[8][8];
         for(int i=0; i<size; i++) {
@@ -124,35 +144,25 @@ public class Bitplane {
             }
         }
     }
-
+    
+    public String toString() {
+        String result = "";
+        for(int i=0; i<bits.length; i++) {
+            for(int j=0; j<bits[i].length; j++) {
+                result = result + bits[i][j].convertToInt() + " ";
+            }
+            result = result + "\n";
+        }
+        return result;
+    }
+    
     public static void main(String[] args) {
         Bitplane bitplane = new Bitplane();
         Bit[][] wc = bitplane.makeWcPattern();
         bitplane.setBits(wc);
-        for(int i=0; i<8; i++) {
-            for(int j=0; j<8; j++) {
-                System.out.print(wc[i][j].convertToInt());
-            }
-            System.out.println();
-        }
-        System.out.println("************************************");
-        bitplane.convertToCGC();
-        for(int i=0; i<bitplane.getSize(); i++) {
-            for(int j=0; j<bitplane.getSize(); j++) {
-                System.out.print(bitplane.getBits()[i][j].convertToInt());
-            }
-            System.out.println();
-        }
-        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
-        System.out.println("************************************");
-        bitplane.deconvertToPBC();
-        for(int i=0; i<bitplane.getSize(); i++) {
-            for(int j=0; j<bitplane.getSize(); j++) {
-                System.out.print(bitplane.getBits()[i][j].convertToInt());
-            }
-            System.out.println();
-        }
-        System.out.println("Is Noisy ? " + bitplane.isNoisy(0.3));
+        System.out.println("Value : " + bitplane.checkNoisy());
+        bitplane.conjugate();
+        System.out.println("Value : " + bitplane.checkNoisy());
     }
     
 }

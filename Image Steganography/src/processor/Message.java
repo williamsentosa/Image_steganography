@@ -43,6 +43,13 @@ public class Message {
         System.out.println();
     }
     
+    @Override
+    public String toString() {
+       String result = "";
+       
+       return result;
+    }
+    
     public Message(String path) throws IOException {
         byte[] tempMessage;
         int extensionIndex;
