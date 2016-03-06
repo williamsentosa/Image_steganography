@@ -344,7 +344,7 @@ public class Image {
     public double checkImageQuality (Pixel[][] pixOrigin, Pixel[][] pixStegano) {
         double result;
         if (countRMS(pixOrigin, pixStegano) == 0) {
-            result = 1;
+            result = 256;
         } else {
             result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
         }
