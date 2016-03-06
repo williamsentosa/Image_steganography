@@ -99,7 +99,19 @@ public class Image {
             
             int cols = bufferedImage.getHeight();
             int rows = bufferedImage.getWidth();
-            pixels = new Pixel[cols][rows];
+            
+            int pixCols = cols;
+            int pixRows = rows;
+            
+            if (cols % 8 != 0) {
+                pixCols += 8 - cols % 8 ;
+            }
+            
+            if (rows % 8 != 0) {
+                pixRows += 8 - rows % 8 ;
+            }
+            
+            pixels = new Pixel[pixCols][pixRows];
             
             int idx = 0;
             for (int i = 0; i < cols; i++) {
@@ -163,7 +175,12 @@ public class Image {
             for (int j = 0; j < rows; j++) {
                 for (int k = 0; k < pixelSize/8; k++) {
                     //System.out.println((k+j*(pixelSize/8)+i*cols*pixelSize/8) + " " + pixels[i][j].getBytes()[k]);
-                    resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
+                    if (pixels[i][j] == null) {
+                        resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = 0;
+                    } else {
+                        resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
+                    }
+                    
                 }
                 
             }
@@ -259,7 +276,6 @@ public class Image {
     
     public Block[][] convertImageToBlocks() {
         convertImageToPixels();
-        convertPixelsToBlock();
         return convertPixelsToBlocks();
     }
     
@@ -333,21 +349,20 @@ public class Image {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < pixOrigin[0][0].getSize()/8; k++) {
                     
+                    //System.out.println((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]));
                     sum += Math.pow((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]),2);
                 }
             }
         }
         res = Math.sqrt(sum/total);
+        System.out.println("Sum : " + sum + " Total : " + total);
+        System.out.println("RMS : " + res);
         return res;
     }
     
     public double checkImageQuality (Pixel[][] pixOrigin, Pixel[][] pixStegano) {
         double result;
-        if (countRMS(pixOrigin, pixStegano) == 0) {
-            result = 256;
-        } else {
-            result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
-        }
+        result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
         
         return result;
     }
@@ -355,7 +370,9 @@ public class Image {
     public static void main(String args[]) throws IOException {
         String path = "flower.png";
         Image img = new Image(path);
-        //img.convertImageToBlocks();
+        img.convertImageToBlocks();
+        img.convertPixelsToBufferedImage("newFlower.png");
+        /*
         Block[][] blocks = img.convertImageToBlocks();
         System.out.println(blocks.length);
         int x,y,z;
@@ -395,6 +412,7 @@ public class Image {
         Image images = new Image(path);
         Block[][] blocks3 = images.convertImageToBlocks();
         System.out.println("x : " + x + " y : " + y + " z : " + z);
+        //blocks3[10][10].getPixels()[7][7].getBytes()[1] = 100;
         blocks2[x][y].convertToBitplanes();
         for(int a=0; a<blocks2[x][y].getBitplanes()[z].getBits().length; a++) {
             for(int b=0; b<blocks2[x][y].getBitplanes()[z].getBits()[a].length; b++) {
@@ -404,5 +422,6 @@ public class Image {
         }
         
         System.out.println(img.checkImageQuality(img.getPixel(), images.getPixel()));
+        */
     }
 }

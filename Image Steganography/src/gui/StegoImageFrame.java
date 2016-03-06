@@ -62,6 +62,7 @@ public class StegoImageFrame extends javax.swing.JFrame {
     
     private void showQuality() {
         qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(coverImage.getPixel(), stego.getImage().getPixel())));
+        System.out.println(stego.getImage().getPath());
     }
 
     /**
