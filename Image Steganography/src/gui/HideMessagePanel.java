@@ -5,7 +5,16 @@
  */
 package gui;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import processor.Message;
+import processor.Steganography;
 
 /**
  *
@@ -14,12 +23,22 @@ import javax.swing.JFileChooser;
  * @author Angela Lynn - 13513032
  */
 public class HideMessagePanel extends javax.swing.JPanel {
+    private static Steganography stego;
+    private static image.Image coverImage;
 
     /**
      * Creates new form HideMessagePanel
      */
     public HideMessagePanel() {
         initComponents();
+    }
+    
+    public static Steganography getStego() {
+        return stego;
+    }
+    
+    public static image.Image getCoverImage() {
+        return coverImage;
     }
 
     /**
@@ -35,13 +54,15 @@ public class HideMessagePanel extends javax.swing.JPanel {
         browseMessageTextField = new javax.swing.JTextField();
         browseImageButton = new javax.swing.JButton();
         browseMessageButton = new javax.swing.JButton();
-        coverImagePanel = new javax.swing.JPanel();
         keyLabel = new javax.swing.JLabel();
         keyTextField = new javax.swing.JTextField();
         thresholdLabel = new javax.swing.JLabel();
         thresholdTextField = new javax.swing.JTextField();
         convertButton = new javax.swing.JButton();
         encryptionCheckBox = new javax.swing.JCheckBox();
+        coverImageLabel = new javax.swing.JLabel();
+        stegoImageNameLabel = new javax.swing.JLabel();
+        stegoImageNameTextField = new javax.swing.JTextField();
 
         browseImageTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
@@ -57,19 +78,11 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
         browseMessageButton.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         browseMessageButton.setText("Browse Message");
-
-        coverImagePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout coverImagePanelLayout = new javax.swing.GroupLayout(coverImagePanel);
-        coverImagePanel.setLayout(coverImagePanelLayout);
-        coverImagePanelLayout.setHorizontalGroup(
-            coverImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 618, Short.MAX_VALUE)
-        );
-        coverImagePanelLayout.setVerticalGroup(
-            coverImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        browseMessageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseMessageButtonActionPerformed(evt);
+            }
+        });
 
         keyLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         keyLabel.setText("Key");
@@ -93,6 +106,19 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
         encryptionCheckBox.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         encryptionCheckBox.setText("Encryption");
+        encryptionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                encryptionCheckBoxActionPerformed(evt);
+            }
+        });
+
+        coverImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        coverImageLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        stegoImageNameLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        stegoImageNameLabel.setText("Stego Image Name");
+
+        stegoImageNameTextField.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -111,14 +137,16 @@ public class HideMessagePanel extends javax.swing.JPanel {
                             .addComponent(browseImageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(convertButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(coverImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(coverImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(thresholdTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                             .addComponent(thresholdLabel)
                             .addComponent(keyLabel)
                             .addComponent(encryptionCheckBox)
-                            .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(keyTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                            .addComponent(stegoImageNameLabel)
+                            .addComponent(stegoImageNameTextField))))
                 .addGap(75, 75, 75))
         );
         layout.setVerticalGroup(
@@ -144,22 +172,89 @@ public class HideMessagePanel extends javax.swing.JPanel {
                         .addComponent(thresholdLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(thresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addGap(41, 41, 41)
+                        .addComponent(stegoImageNameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(stegoImageNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                         .addComponent(convertButton))
-                    .addComponent(coverImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(coverImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(76, 76, 76))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void convertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_convertButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            coverImage = new image.Image(browseImageTextField.getText());
+            stego = new Steganography(coverImage);
+            Message message = new Message(browseMessageTextField.getText());
+            
+            if (encryptionCheckBox.isSelected()) {
+                message.encrypt(keyTextField.getText());
+            }
+            if (stego.hideInformation(message, Float.parseFloat(thresholdTextField.getText()), stegoImageNameTextField.getText())) {
+                StegoImageFrame stegoFrame = new StegoImageFrame();
+                stegoFrame.setVisible(true);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(HideMessagePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_convertButtonActionPerformed
 
     private void browseImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseImageButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(this);
         
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                BufferedImage image = ImageIO.read(fileChooser.getSelectedFile());
+                
+                browseImageTextField.setText(fileChooser.getSelectedFile().getPath());
+                if ((image.getWidth() > coverImageLabel.getWidth()) && (image.getHeight() > coverImageLabel.getHeight())) {
+                    if (image.getWidth() > image.getHeight()) {
+                        coverImageLabel.setIcon(new ImageIcon(image.getScaledInstance(coverImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                    } else {
+                        coverImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, coverImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+                    }
+                } else if (image.getWidth() > coverImageLabel.getWidth()) {
+                    coverImageLabel.setIcon(new ImageIcon(image.getScaledInstance(coverImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
+                } else if (image.getHeight() > coverImageLabel.getHeight()) {
+                    coverImageLabel.setIcon(new ImageIcon(image.getScaledInstance(-1, coverImageLabel.getHeight(), Image.SCALE_SMOOTH)));
+                } else {
+                    coverImageLabel.setIcon(new ImageIcon(image));
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(HideMessagePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            browseImageTextField.setText("");
+            coverImageLabel.setIcon(null);
+        }
     }//GEN-LAST:event_browseImageButtonActionPerformed
+
+    private void browseMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMessageButtonActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            browseMessageTextField.setText(fileChooser.getSelectedFile().getPath());
+        } else {
+            browseMessageTextField.setText("");
+        }
+    }//GEN-LAST:event_browseMessageButtonActionPerformed
+
+    private void encryptionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptionCheckBoxActionPerformed
+        // TODO add your handling code here:
+        if (encryptionCheckBox.isSelected()) {
+            keyLabel.setEnabled(true);
+            keyTextField.setEnabled(true);
+        } else {
+            keyLabel.setEnabled(false);
+            keyTextField.setEnabled(false);
+        }
+    }//GEN-LAST:event_encryptionCheckBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -168,10 +263,12 @@ public class HideMessagePanel extends javax.swing.JPanel {
     private javax.swing.JButton browseMessageButton;
     private javax.swing.JTextField browseMessageTextField;
     private javax.swing.JButton convertButton;
-    private javax.swing.JPanel coverImagePanel;
+    private javax.swing.JLabel coverImageLabel;
     private javax.swing.JCheckBox encryptionCheckBox;
     private javax.swing.JLabel keyLabel;
     private javax.swing.JTextField keyTextField;
+    private javax.swing.JLabel stegoImageNameLabel;
+    private javax.swing.JTextField stegoImageNameTextField;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JTextField thresholdTextField;
     // End of variables declaration//GEN-END:variables

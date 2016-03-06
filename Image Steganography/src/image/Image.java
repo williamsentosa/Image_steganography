@@ -8,7 +8,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.DataBufferByte;
@@ -85,12 +84,6 @@ public class Image {
         WritableRaster raster = bufferedImage.getRaster();
         DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
         dataByte = data.getData();
-        /*
-        for (int i = 0; i < dataByte.length; i++) {
-            System.out.print(dataByte[i] + " ");
-        }
-        System.out.println();
-        */
         return dataByte;
     }
     
@@ -108,7 +101,6 @@ public class Image {
             int rows = bufferedImage.getWidth();
             pixels = new Pixel[cols][rows];
             
-            //System.out.println(dataByte.length);
             int idx = 0;
             for (int i = 0; i < cols; i++) {
                 for (int j = 0; j < rows; j++) {
@@ -116,7 +108,6 @@ public class Image {
                     byte[] byteTemp = new byte[pixelSize/8];
                     for (int k = 0; k < pixelSize/8; k++) {
                         byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
-                        //System.out.println(idx + k+(j*(pixelSize/8))+(i*cols*pixelSize/8));
                     }
                     pixels[i][j].setBytes(byteTemp);
                 }
@@ -150,7 +141,6 @@ public class Image {
                     byte[] byteTemp = new byte[pixelSize/8];
                     for (int k = 0; k < pixelSize/8; k++) {
                         byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
-                        //System.out.println(idx + k+(j*(pixelSize/8))+(i*cols*pixelSize/8));
                     }
                     pixels[i][j].setBytes(byteTemp);
                 }
@@ -178,13 +168,6 @@ public class Image {
                 
             }
         }
-        /*
-        for (int i = 0; i < resultByte.length; i++) {
-            System.out.print(resultByte[i] + " ");
-        }
-        System.out.println();
-        
-        System.out.println(rows + " " + cols);*/
         return resultByte;
     }
     
@@ -220,8 +203,6 @@ public class Image {
         int col = pixels.length;
         int row = pixels[0].length;
         
-        //System.out.println(row + " " + col);
-        
         if (row % 8 != 0) {
             row = 8 + (row/8)*8;
         } 
@@ -230,7 +211,6 @@ public class Image {
             col = 8 + (col/8)*8;
         } 
         
-        //System.out.println(row + " " + col);
         Block block = new Block();
         Pixel[][] blockPixel = new Pixel[col][row];
         
@@ -352,7 +332,6 @@ public class Image {
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < pixOrigin[0][0].getSize()/8; k++) {
-                    System.out.println(pixOrigin[i][j].getBytes()[k] + " " + pixStegano[i][j].getBytes()[k]);
                     
                     sum += Math.pow((pixOrigin[i][j].getBytes()[k]-pixStegano[i][j].getBytes()[k]),2);
                 }
@@ -406,23 +385,5 @@ public class Image {
             }
             System.out.println();
         }
-        //img.convertPixelsToBufferedImage();
-        
-        //img.convertPixelsToBlocks();
-        //img.convertPixelMatrixToBufferedImage(img.convertPixelsToBlocks().getPixels());
-        //img.convertImageToPixel();
-        /*
-        path = "newcoba.png";
-        Image image = new Image(path);
-        image.convertImageToPixels();
-        //Pixel[][] pixel = img.convertImagesToPixels("newcoba.png");
-        for (int i = 0; i < 80; i++) {
-            image.getPixel()[i][0].getBytes()[1] = (byte) 100;
-        }
-        
-        
-       System.out.println(img.countRMS(img.getPixel(), image.getPixel()));
-        */
     }
-    
 }
