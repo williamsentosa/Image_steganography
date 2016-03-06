@@ -7,6 +7,7 @@ package gui;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,7 +153,7 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         int returnVal = fileChooser.showOpenDialog(this);
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -195,7 +196,7 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
     private void saveMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMessageButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         Steganography stego = new Steganography(new image.Image(browseTextField.getText()));
         Message message = stego.extractInformation(Float.parseFloat(thresholdTextField.getText()));
         
@@ -205,7 +206,9 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
         int returnVal = fileChooser.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                message.save(fileChooser.getCurrentDirectory().toString(), fileChooser.getSelectedFile().toString());
+                System.out.println("CURRENT DIRECTORY " + fileChooser.getCurrentDirectory().toString());
+                System.out.println("NAMA FILE " + fileChooser.getSelectedFile().getName());
+                message.save(fileChooser.getCurrentDirectory().toString() + "\\", fileChooser.getSelectedFile().getName());
             } catch (IOException ex) {
                 Logger.getLogger(StegoImageFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

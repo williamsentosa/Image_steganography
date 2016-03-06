@@ -39,8 +39,8 @@ public class StegoImageFrame extends javax.swing.JFrame {
         coverImage = HideMessagePanel.getCoverImage();
         
         showImage();
-        qualityLabel.setVisible(false);
-//        showQuality();
+//        qualityLabel.setVisible(false);
+        showQuality();
     }
     
     private void showImage() throws IOException {
@@ -78,11 +78,13 @@ public class StegoImageFrame extends javax.swing.JFrame {
         stegoImageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         qualityLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         qualityLabel.setText("Quality");
 
         qualityValueLabel.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        qualityValueLabel.setToolTipText("");
 
         stegoImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         stegoImageLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -107,9 +109,9 @@ public class StegoImageFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(stegoImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(qualityValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(qualityLabel))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(qualityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(qualityValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(230, 230, 230)))
                 .addContainerGap(76, Short.MAX_VALUE))
         );

@@ -7,6 +7,7 @@ package gui;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -204,7 +205,7 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
     private void browseImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseImageButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         int returnVal = fileChooser.showOpenDialog(this);
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -236,8 +237,9 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
     private void browseMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMessageButtonActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         int returnVal = fileChooser.showOpenDialog(this);
+        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             browseMessageTextField.setText(fileChooser.getSelectedFile().getPath());
         } else {
