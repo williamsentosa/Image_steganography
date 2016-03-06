@@ -343,7 +343,12 @@ public class Image {
     
     public double checkImageQuality (Pixel[][] pixOrigin, Pixel[][] pixStegano) {
         double result;
-        result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
+        if (countRMS(pixOrigin, pixStegano) == 0) {
+            result = 1;
+        } else {
+            result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
+        }
+        
         return result;
     }
     
@@ -385,5 +390,19 @@ public class Image {
             }
             System.out.println();
         }
+       
+        
+        Image images = new Image(path);
+        Block[][] blocks3 = images.convertImageToBlocks();
+        System.out.println("x : " + x + " y : " + y + " z : " + z);
+        blocks2[x][y].convertToBitplanes();
+        for(int a=0; a<blocks2[x][y].getBitplanes()[z].getBits().length; a++) {
+            for(int b=0; b<blocks2[x][y].getBitplanes()[z].getBits()[a].length; b++) {
+                System.out.print(blocks2[x][y].getBitplanes()[z].getBits()[a][b].convertToInt());
+            }
+            System.out.println();
+        }
+        
+        System.out.println(img.checkImageQuality(img.getPixel(), images.getPixel()));
     }
 }
