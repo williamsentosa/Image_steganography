@@ -114,16 +114,22 @@ public class Image {
             pixels = new Pixel[pixCols][pixRows];
             
             int idx = 0;
-            for (int i = 0; i < cols; i++) {
-                for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < pixCols; i++) {
+                for (int j = 0; j < pixRows; j++) {
                     pixels[i][j] = new Pixel(pixelSize);
                     byte[] byteTemp = new byte[pixelSize/8];
                     for (int k = 0; k < pixelSize/8; k++) {
-                        byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
+                        if (i >= cols || j >= rows) {
+                            byteTemp[k] = 0;
+                        } else {
+                            byteTemp[k] = dataByte[idx + k+(j*(pixelSize/8))+(i*rows*pixelSize/8)];
+                        }
+                        
                     }
                     pixels[i][j].setBytes(byteTemp);
                 }
-            }  
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -175,11 +181,7 @@ public class Image {
             for (int j = 0; j < rows; j++) {
                 for (int k = 0; k < pixelSize/8; k++) {
                     //System.out.println((k+j*(pixelSize/8)+i*cols*pixelSize/8) + " " + pixels[i][j].getBytes()[k]);
-                    if (pixels[i][j] == null) {
-                        resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = 0;
-                    } else {
-                        resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
-                    }
+                    resultByte[k+j*(pixelSize/8)+i*rows*pixelSize/8] = pixels[i][j].getBytes()[k];
                     
                 }
                 
