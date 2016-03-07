@@ -15,6 +15,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import javax.swing.JFrame;
 import processor.Bitplane;
@@ -366,15 +367,13 @@ public class Image {
         double result;
         result = 20 * Math.log10((double)256/countRMS(pixOrigin, pixStegano));
         
-        return result;
+        return (double)Math.round(result * 1000d) / 1000d;
     }
     
     public static void main(String args[]) throws IOException {
         String path = "flower.png";
         Image img = new Image(path);
-        img.convertImageToBlocks();
-        img.convertPixelsToBufferedImage("newFlower.png");
-        /*
+        
         Block[][] blocks = img.convertImageToBlocks();
         System.out.println(blocks.length);
         int x,y,z;
@@ -410,20 +409,10 @@ public class Image {
             System.out.println();
         }
        
-        
+        path = "flowernew.png";
         Image images = new Image(path);
-        Block[][] blocks3 = images.convertImageToBlocks();
-        System.out.println("x : " + x + " y : " + y + " z : " + z);
-        //blocks3[10][10].getPixels()[7][7].getBytes()[1] = 100;
-        blocks2[x][y].convertToBitplanes();
-        for(int a=0; a<blocks2[x][y].getBitplanes()[z].getBits().length; a++) {
-            for(int b=0; b<blocks2[x][y].getBitplanes()[z].getBits()[a].length; b++) {
-                System.out.print(blocks2[x][y].getBitplanes()[z].getBits()[a][b].convertToInt());
-            }
-            System.out.println();
-        }
-        
+        images.convertImageToBlocks();
         System.out.println(img.checkImageQuality(img.getPixel(), images.getPixel()));
-        */
+        
     }
 }
