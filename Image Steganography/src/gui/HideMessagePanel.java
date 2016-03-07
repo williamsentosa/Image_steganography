@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import processor.Message;
 import processor.Steganography;
 
@@ -26,6 +28,8 @@ import processor.Steganography;
 public class HideMessagePanel extends javax.swing.JPanel {
     private static Steganography stego;
     private static image.Image coverImage;
+    private static String stegoImageName;
+    private static String coverImagePath;
 
     /**
      * Creates new form HideMessagePanel
@@ -40,6 +44,14 @@ public class HideMessagePanel extends javax.swing.JPanel {
     
     public static image.Image getCoverImage() {
         return coverImage;
+    }
+    
+    public static String getStegoImageName() {
+        return stegoImageName;
+    }
+    
+    public static String getCoverImagePath() {
+        return coverImagePath;
     }
 
     /**
@@ -194,9 +206,13 @@ public class HideMessagePanel extends javax.swing.JPanel {
             if (encryptionCheckBox.isSelected()) {
                 message.encrypt(keyTextField.getText());
             }
-            if (stego.hideInformation(message, Float.parseFloat(thresholdTextField.getText()), stegoImageNameTextField.getText())) {
+            if (stego.hideInformation(message, Float.parseFloat(thresholdTextField.getText()), stegoImageNameTextField.getText() + ".png")) {
+                coverImagePath = browseImageTextField.getText();
+                stegoImageName = stegoImageNameTextField.getText();
                 StegoImageFrame stegoFrame = new StegoImageFrame();
                 stegoFrame.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Message exceeds payload", "Hide Failed", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (IOException ex) {
             Logger.getLogger(HideMessagePanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,9 +221,13 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
     private void browseImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseImageButtonActionPerformed
         // TODO add your handling code here:
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Portable Network Graphics", "png");
+        int returnVal;
         JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
-        int returnVal = fileChooser.showOpenDialog(this);
         
+        fileChooser.setFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 BufferedImage image = ImageIO.read(fileChooser.getSelectedFile());
@@ -237,9 +257,10 @@ public class HideMessagePanel extends javax.swing.JPanel {
 
     private void browseMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMessageButtonActionPerformed
         // TODO add your handling code here:
+        int returnVal;
         JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
-        int returnVal = fileChooser.showOpenDialog(this);
         
+        returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             browseMessageTextField.setText(fileChooser.getSelectedFile().getPath());
         } else {

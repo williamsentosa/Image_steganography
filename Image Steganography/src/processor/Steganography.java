@@ -75,14 +75,6 @@ public class Steganography {
 //        System.out.print("Pesan ke " + (messages.length-100) + " : ");
 //        message.printMessage(messages.length - 100);
         
-        System.out.println("Messages ke - "+ (messages.length - 1) +" : ");
-        for(int a=0; a<messages[messages.length - 1].getBits().length; a++) {
-            for(int b=0; b<messages[messages.length - 1].getBits()[a].length; b++) {
-                System.out.print(messages[messages.length - 1].getBits()[a][b].convertToInt());
-            }
-            System.out.println();
-        }
-        
         int n = -1;
         Bitplane msgLengthInfo = new Bitplane();
         
@@ -136,20 +128,6 @@ public class Steganography {
         this.image.convertBlocksToPixels(blocks);
         this.image.convertPixelsToBufferedImage(filename);      
         return true;
-    }
-   
-    private Bitplane copyBitplane(Bitplane bitplane)  {
-        Bitplane result = new Bitplane();
-        Bit[][] temp = new Bit[8][8];
-        for(int i=0; i<8; i++) {
-            for(int j=0; j<8; j++) {
-                Bit b = new Bit();
-                b.setValue(bitplane.getBits()[i][j].getValue());
-                temp[i][j] = b;
-            }
-        }
-        result.setBits(temp);
-        return result;
     }
      
     public Message extractInformation(double threshold) {
@@ -216,9 +194,9 @@ public class Steganography {
                         //System.out.println("Value : " + listBitplanes.get(i)[j].checkNoisy());
                         if(listBitplanes.get(i)[j].isConjugated()) {
                             listBitplanes.get(i)[j].conjugate();
-                            messages[n] = copyBitplane(listBitplanes.get(i)[j]);
+                            messages[n] = listBitplanes.get(i)[j];
                         } else {
-                            messages[n] = copyBitplane(listBitplanes.get(i)[j]);
+                            messages[n] = listBitplanes.get(i)[j];
                         }
                         
                         n++;
@@ -238,7 +216,7 @@ public class Steganography {
     }
     
     public static void main (String[] args) {
-        Image image = new Image("supermegafunbits.png");
+        Image image = new Image("flower.png");
         Steganography stegano = new Steganography(image);
         Message message;
         double threshold = (double) 0.4;
@@ -252,17 +230,18 @@ public class Steganography {
         } catch (IOException ex) {
             Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(success) {
-            Image image2 = new Image(filename);
-            Steganography stegano2 = new Steganography(image2);
-            Message message2 = stegano2.extractInformation(threshold);
-            message2.printMessage();
-            try {
-                message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "hasil");
-            } catch (IOException ex) {
-                Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        double threshold2 = 0.4;
+        String filename2 = "hasil.png";
+        Image image2 = new Image(filename2);
+        Steganography stegano2 = new Steganography(image2);
+        Message message2 = stegano2.extractInformation(threshold2);
+        message2.printMessage();
+        try {
+            message2.save("D:\\Semester 6\\Tugas\\Kriptografi\\Tugas Besar 1\\Image_steganography\\Image Steganography\\", "hasil");
+        } catch (IOException ex) {
+            Logger.getLogger(Steganography.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
     
 }
