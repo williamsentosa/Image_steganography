@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import processor.Message;
 import processor.Steganography;
 
@@ -153,9 +154,13 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         // TODO add your handling code here:
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Portable Network Graphics", "png");
+        int returnVal;
         JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
-        int returnVal = fileChooser.showOpenDialog(this);
         
+        fileChooser.setFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 BufferedImage image = ImageIO.read(fileChooser.getSelectedFile());
@@ -196,6 +201,7 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
 
     private void saveMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMessageButtonActionPerformed
         // TODO add your handling code here:
+        FileNameExtensionFilter filter;
         JFileChooser fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         Steganography stego = new Steganography(new image.Image(browseTextField.getText()));
         Message message = stego.extractInformation(Float.parseFloat(thresholdTextField.getText()));
@@ -203,11 +209,12 @@ public class ExtractMessagePanel extends javax.swing.JPanel {
         if (decryptionCheckBox.isSelected()) {
             message.decrypt(keyTextField.getText());
         }
+        filter = new FileNameExtensionFilter("Message File (*" + message.getExtension() + ")", message.getExtension().replace(".", ""));
+        fileChooser.setFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
         int returnVal = fileChooser.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                System.out.println("CURRENT DIRECTORY " + fileChooser.getCurrentDirectory().toString());
-                System.out.println("NAMA FILE " + fileChooser.getSelectedFile().getName());
                 message.save(fileChooser.getCurrentDirectory().toString() + "\\", fileChooser.getSelectedFile().getName());
             } catch (IOException ex) {
                 Logger.getLogger(StegoImageFrame.class.getName()).log(Level.SEVERE, null, ex);

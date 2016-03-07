@@ -241,12 +241,22 @@ public class Message {
         
         tempString = new String(message, StandardCharsets.ISO_8859_1);
         extensionIndex = tempString.lastIndexOf(".");
-        System.out.println(path + fileName + tempString.substring(extensionIndex));
         tempMessage = tempString.substring(0, extensionIndex).getBytes(StandardCharsets.ISO_8859_1);
         
         fos = new FileOutputStream(path + fileName + tempString.substring(extensionIndex));
         fos.write(tempMessage);
         fos.close();
+    }
+    
+    public String getExtension() {
+        int extensionIndex;
+        String tempString;
+        
+        tempString = new String(message, StandardCharsets.ISO_8859_1);
+        System.out.println(tempString);
+        extensionIndex = tempString.lastIndexOf(".");
+        
+        return tempString.substring(extensionIndex);
     }
     
     public static void main(String[] args) throws IOException {

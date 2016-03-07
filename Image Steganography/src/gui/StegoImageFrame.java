@@ -14,8 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import processor.Message;
 import processor.Steganography;
 
 /**
@@ -27,6 +25,7 @@ import processor.Steganography;
 public class StegoImageFrame extends javax.swing.JFrame {
     private Steganography stego;
     private image.Image coverImage;
+    private String stegoImageName;
 
     /**
      * Creates new form StegoImageFrame
@@ -37,14 +36,15 @@ public class StegoImageFrame extends javax.swing.JFrame {
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2 - 20);
         stego = HideMessagePanel.getStego();
         coverImage = HideMessagePanel.getCoverImage();
+        stegoImageName = HideMessagePanel.getStegoImageName();
         
         showImage();
-//        qualityLabel.setVisible(false);
         showQuality();
     }
     
     private void showImage() throws IOException {
-        Image image = ImageIO.read(new File(stego.getImage().getPath()));
+        File coverFile = new File (stego.getImage().getPath());
+        Image image = ImageIO.read(new File(coverFile.getParent() + "\\" + stegoImageName + ".png"));
         if ((stego.getImage().getPixel().length > stegoImageLabel.getWidth()) && (stego.getImage().getPixel()[0].length > stegoImageLabel.getHeight())) {
             if (stego.getImage().getPixel().length > stego.getImage().getPixel()[0].length) {
                 stegoImageLabel.setIcon(new ImageIcon(image.getScaledInstance(stegoImageLabel.getWidth(), -1, Image.SCALE_SMOOTH)));
@@ -61,8 +61,10 @@ public class StegoImageFrame extends javax.swing.JFrame {
     }
     
     private void showQuality() {
-        qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(coverImage.getPixel(), stego.getImage().getPixel())));
-        System.out.println(stego.getImage().getPath());
+        File coverFile = new File(stego.getImage().getPath());
+        image.Image stegoImage = new image.Image(coverFile.getParent() + "\\" + stegoImageName + ".png");
+        stegoImage.convertImageToBlocks();
+        qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(stego.getImage().getPixel(), stegoImage.getPixel())));
     }
 
     /**
