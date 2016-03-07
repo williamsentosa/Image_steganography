@@ -29,6 +29,7 @@ public class HideMessagePanel extends javax.swing.JPanel {
     private static Steganography stego;
     private static image.Image coverImage;
     private static String stegoImageName;
+    private static String coverImagePath;
 
     /**
      * Creates new form HideMessagePanel
@@ -47,6 +48,10 @@ public class HideMessagePanel extends javax.swing.JPanel {
     
     public static String getStegoImageName() {
         return stegoImageName;
+    }
+    
+    public static String getCoverImagePath() {
+        return coverImagePath;
     }
 
     /**
@@ -202,6 +207,7 @@ public class HideMessagePanel extends javax.swing.JPanel {
                 message.encrypt(keyTextField.getText());
             }
             if (stego.hideInformation(message, Float.parseFloat(thresholdTextField.getText()), stegoImageNameTextField.getText() + ".png")) {
+                coverImagePath = browseImageTextField.getText();
                 stegoImageName = stegoImageNameTextField.getText();
                 StegoImageFrame stegoFrame = new StegoImageFrame();
                 stegoFrame.setVisible(true);

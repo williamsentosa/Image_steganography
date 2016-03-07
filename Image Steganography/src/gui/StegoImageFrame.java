@@ -26,6 +26,7 @@ public class StegoImageFrame extends javax.swing.JFrame {
     private Steganography stego;
     private image.Image coverImage;
     private String stegoImageName;
+    private String coverImagePath;
 
     /**
      * Creates new form StegoImageFrame
@@ -37,6 +38,7 @@ public class StegoImageFrame extends javax.swing.JFrame {
         stego = HideMessagePanel.getStego();
         coverImage = HideMessagePanel.getCoverImage();
         stegoImageName = HideMessagePanel.getStegoImageName();
+        coverImagePath = HideMessagePanel.getCoverImagePath();
         
         showImage();
         showQuality();
@@ -62,9 +64,11 @@ public class StegoImageFrame extends javax.swing.JFrame {
     
     private void showQuality() {
         File coverFile = new File(stego.getImage().getPath());
+        image.Image cover = new image.Image(coverImagePath);
         image.Image stegoImage = new image.Image(coverFile.getParent() + "\\" + stegoImageName + ".png");
+        cover.convertImageToBlocks();
         stegoImage.convertImageToBlocks();
-        qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(stego.getImage().getPixel(), stegoImage.getPixel())));
+        qualityValueLabel.setText(String.valueOf(stego.getImage().checkImageQuality(cover.getPixel(), stegoImage.getPixel())));
     }
 
     /**
